@@ -31,13 +31,13 @@ def ping():
 @app.route("/twitter/on")
 def twitter_on():
     pubnub.subscribe().channels("pubnub-twitter").execute()
-    return {status: "ON"}
+    return {"status": "ON"}
 
 
 @app.route("/twitter/off")
 def twitter_off():
     pubnub.unsubscribe().channels("pubnub-twitter").execute()
-    return {status: "OFF"}
+    return {"status": "OFF"}
 
 
 app.run(host="0.0.0.0", port=80)
