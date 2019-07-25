@@ -47,19 +47,19 @@ confluent.delete:
 confluent.open:
 	open http://localhost:8080
 
-#### Python App
+#### Python Client
 
 client.install: client.build
-	helm install --name python-app ./python-app-chart --namespace kafka
+	helm install --name client ./python-chart --namespace kafka --set image.repository=sfo/python-client
 
 client.build:
-	docker build python-app -t sfo/python-app
+	docker build python-client -t sfo/python-client
 
 client.delete:
 	helm del --purge python-app
 
 client.open:
-	open http://localhost:8001/api/v1/namespaces/kafka/services/http:python-app-python-app-chart:http/proxy
+	open http://localhost:8001/api/v1/namespaces/kafka/services/http:client-python-app:http/proxy
 
 #### Other
 

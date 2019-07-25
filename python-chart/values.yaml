@@ -5,7 +5,6 @@
 replicaCount: 1
 
 image:
-  repository: sfo/python-app
   tag: latest
   pullPolicy: IfNotPresent
 
