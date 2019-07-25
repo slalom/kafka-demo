@@ -22,6 +22,14 @@
 6. Use the token from previous step for authentication
 
 
+### Jenkins
+
+1. `make jenkins.install`
+2. Wait a few minutes for Jenkins to come up
+3. `make jenkins.open`
+4. `make jenkins.password`
+5. Log in with user admin and password from the output above
+
 ### Confluent platform
 
 1. `make confluent.install`

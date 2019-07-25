@@ -15,6 +15,22 @@ dashboard.token:
 dashboard.open:
 	open http://localhost:8001/api/v1/namespaces/default/services/https:kube-dashboard-kubernetes-dashboard:https/proxy/#!/overview?namespace=default
 
+
+#### Jenkins
+
+jenkins.install:
+	helm install --name jenkins --namespace kafka stable/jenkins --set master.servicePort=8081
+
+jenkins.password:
+	kubectl get secret --namespace kafka jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode
+
+jenkins.open:
+	open http://localhost:8081
+
+jenkins.delete:
+	helm del --purge jenkins	
+
+
 #### Confluent
 
 confluent.install:
@@ -33,14 +49,19 @@ confluent.open:
 
 #### Python App
 
-install-python-app: build-python-app
+client.install: client.build
 	helm install --name python-app ./python-app-chart --namespace kafka
 
-build-python-app:
+client.build:
 	docker build python-app -t sfo/python-app
 
-delete-python-app:
+client.delete:
 	helm del --purge python-app
 
-run-consumer:
+client.open:
+	open http://localhost:8001/api/v1/namespaces/kafka/services/http:python-app-python-app-chart:http/proxy
+
+#### Other
+
+consumer.run:
 	kubectl exec -c cp-kafka-broker -it confluent-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --topic my-topic --from-beginning	
