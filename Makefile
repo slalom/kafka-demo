@@ -66,6 +66,9 @@ publisher.start:
 publisher.stop:
 	curl -s http://localhost:8001/api/v1/namespaces/kafka/services/http:publisher-python-app:http/proxy/twitter/off
 
+publisher.logs:
+	kubectl get pods --selector=app.kubernetes.io/instance=publisher -n kafka -o json | jq '.items[0].metadata.name' -r | xargs kubectl logs -f -n kafka
+
 #### Other
 
 consumer.twitter:
