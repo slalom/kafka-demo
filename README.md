@@ -15,7 +15,7 @@
 ### Kube dashboard
 
 1. `make dashboard.install`
-2. `make proxy.start`
+2. `make kube.proxy`
 3. Open new terminal tab
 4. `make dashboard.token`
 5. `make dashboard.open`
@@ -40,8 +40,9 @@
 
 ### Python Twitter Publisher
 
-1. `make publisher.install`
-2. `make publisher.start`
+1. `make kube.proxy` if you don't have it running yet
+2. `make publisher.install`
+3. `make publisher.start`
 
 
 ### Console consumer for Twitter feed

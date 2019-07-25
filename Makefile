@@ -6,9 +6,6 @@ dashboard.install:
 dashboard.delete:
 	helm del --purge kube-dashboard
 
-proxy.start:
-	kubectl proxy
-
 dashboard.token:
 	kubectl get serviceaccounts kube-dashboard-kubernetes-dashboard -o json | jq '.secrets[0].name' -r | xargs kubectl get secret -o json | jq '.data.token | @base64d' -r
 
@@ -70,6 +67,9 @@ publisher.logs:
 	kubectl get pods --selector=app.kubernetes.io/instance=publisher -n kafka -o json | jq '.items[0].metadata.name' -r | xargs kubectl logs -f -n kafka
 
 #### Other
+
+kube.proxy:
+	kubectl proxy
 
 consumer.twitter:
 	kubectl exec -c cp-kafka-broker -it confluent-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --topic twitter
