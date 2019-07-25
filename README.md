@@ -38,7 +38,12 @@
 4. Open new terminal tab
 5. `make confluent.open`
 
-### Python client
+### Python Twitter Publisher
 
-*Work in progress*
-http://localhost:8001/api/v1/namespaces/kafka/services/http:python-app-python-app-chart:http/proxy/
+1. `make publisher.install`
+2. `make publisher.start`
+
+
+### Console consumer for Twitter feed
+
+1. `make consumer.twitter`

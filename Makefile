@@ -47,28 +47,26 @@ confluent.delete:
 confluent.open:
 	open http://localhost:8080
 
-#### Python Client
+#### Python Publisher
 
-topic=test-topic
+publisher.install: publisher.build
+	helm install --name publisher ./python-chart --namespace kafka --set image.repository=sfo/python-publisher
 
-client.install: client.build
-	helm install --name client ./python-chart --namespace kafka --set image.repository=sfo/python-client
+publisher.build:
+	docker build python-publisher -t sfo/python-publisher
 
-client.build:
-	docker build python-client -t sfo/python-client
+publisher.delete:
+	helm del --purge publisher
 
-client.delete:
-	helm del --purge client
+publisher.update: publisher.delete publisher.install
 
-client.update: client.delete client.install
+publisher.start:
+	curl -s http://localhost:8001/api/v1/namespaces/kafka/services/http:publisher-python-app:http/proxy/twitter/on
 
-client.open:
-	open http://localhost:8001/api/v1/namespaces/kafka/services/http:client-python-app:http/proxy
-
-client.send:
-	curl -s http://localhost:8001/api/v1/namespaces/kafka/services/http:client-python-app:http/proxy/send?message=$(message)\&topic=$(topic) | jq
+publisher.stop:
+	curl -s http://localhost:8001/api/v1/namespaces/kafka/services/http:publisher-python-app:http/proxy/twitter/off
 
 #### Other
 
-consumer.run:
-	kubectl exec -c cp-kafka-broker -it confluent-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --topic $(topic) --from-beginning	
+consumer.twitter:
+	kubectl exec -c cp-kafka-broker -it confluent-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --topic twitter
