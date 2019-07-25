@@ -49,6 +49,8 @@ confluent.open:
 
 #### Python Client
 
+topic=test-topic
+
 client.install: client.build
 	helm install --name client ./python-chart --namespace kafka --set image.repository=sfo/python-client
 
@@ -56,12 +58,17 @@ client.build:
 	docker build python-client -t sfo/python-client
 
 client.delete:
-	helm del --purge python-app
+	helm del --purge client
+
+client.update: client.delete client.install
 
 client.open:
 	open http://localhost:8001/api/v1/namespaces/kafka/services/http:client-python-app:http/proxy
 
+client.send:
+	curl -s http://localhost:8001/api/v1/namespaces/kafka/services/http:client-python-app:http/proxy/send?message=$(message)\&topic=$(topic) | jq
+
 #### Other
 
 consumer.run:
-	kubectl exec -c cp-kafka-broker -it confluent-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --topic my-topic --from-beginning	
+	kubectl exec -c cp-kafka-broker -it confluent-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --topic $(topic) --from-beginning	

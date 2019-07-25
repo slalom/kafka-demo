@@ -12,9 +12,11 @@ def ping():
 
 @app.route('/send')
 def hello():
-    name = request.args.get("name", "World")
+    message = request.args.get('message', 'Hello World')
+    topic = request.args.get('topic', 'a-topic')
+    print(f'topic is {topic}')
     # Asynchronous by default
-    meta = producer.send('my-topic', name.encode('utf-8')).get(timeout=10)
-    return f'Message sent: {meta}!'
+    meta = producer.send(topic, message.encode('utf-8')).get(timeout=10)
+    return {'timestamp': meta.timestamp, 'offset': meta.offset, 'partition':meta.partition}
 
 app.run(host='0.0.0.0', port=80)
