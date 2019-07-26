@@ -3,6 +3,8 @@
 ## Prerequisites
 
 - Docker with Kubernetes
+- helm
+- terraform
 - jq (for parsing kubectl responses)
 - git (for getting Confluent helm charts)
 
@@ -11,38 +13,43 @@
 ### Prep
 
 1. Get your local Kube up and running
+2. `terraform init`
+
+### Provisioning
+
+1. `terraform apply`
+
+## Accessing services
 
 ### Kube dashboard
 
-1. `make dashboard.install`
-2. `make kube.proxy`
-3. Open new terminal tab
-4. `make dashboard.token`
-5. `make dashboard.open`
-6. Use the token from previous step for authentication
+1. `make kube.proxy`
+2. Open new terminal tab
+3. `make dashboard.token`
+4. `make dashboard.open`
+5. Use the token from previous step for authentication
 
 
 ### Jenkins
 
-1. `make jenkins.install`
-2. Wait a few minutes for Jenkins to come up
-3. `make jenkins.open`
-4. `make jenkins.password`
-5. Log in with user admin and password from the output above
+1. Wait a few minutes for the service to come up
+2. `make jenkins.open`
+3. `make jenkins.password`
+4. Log in with user admin and password from the output above
+
 
 ### Confluent platform
 
-1. `make confluent.install`
-2. Wait a few minutes for it to come up
-3. `make confluent.proxy`
-4. Open new terminal tab
-5. `make confluent.open`
+1. Wait a few minutes for the service to come up
+2. `make confluent.proxy`
+3. Open new terminal tab
+4. `make confluent.open`
 
 ### Python Twitter Publisher
 
 1. `make kube.proxy` if you don't have it running yet
-2. `make publisher.install`
-3. `make publisher.start`
+2. `make publisher.start` to start feeding Twitter messages to the topic
+3. `make publisher.stop` to... stop
 
 
 ### Console consumer for Twitter feed

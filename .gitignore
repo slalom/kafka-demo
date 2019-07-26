@@ -1,7 +1,9 @@
-cp-helm-charts
-
 # python
 __pycache__/
 
 # vs code
 .vscode/
+
+# tf
+.terraform/
+terraform.tfstate*
