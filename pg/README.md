@@ -25,7 +25,7 @@ This is assumed: kubectl port-forward service/kafka-cp-kafka-connect 8083:8083
 curl -d @pg-jdbc-connector.json -H "Content-Type: application/json" -X POST http://localhost:8083/connectors
 
 ## To check the status of the running connector
-curl -X GET http://localhost:8083/connectors/pg-source/status | jq
+curl -X GET http://localhost:8083/connectors/pg-connector/status | jq
 
 ## To delete the connector
-curl -X DELETE http://localhost:8083/connectors/pg-source
+curl -X DELETE http://localhost:8083/connectors/pg-connector
