@@ -21,7 +21,7 @@ resource "helm_release" "kube-dashboard" {
   name       = "kube-dashboard"
   repository = "${data.helm_repository.stable.metadata.0.name}"
   chart      = "kubernetes-dashboard"
-# }
+}
 
 resource "helm_release" "confluent" {
   name       = "confluent"
