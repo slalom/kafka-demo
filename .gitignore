@@ -7,3 +7,6 @@ __pycache__/
 # tf
 .terraform/
 terraform.tfstate*
+
+# mac DS
+.DS_Store
