@@ -10,3 +10,7 @@ terraform.tfstate*
 
 # mac DS
 .DS_Store
+
+# Java
+target/
+*.iml
