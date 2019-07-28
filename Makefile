@@ -59,6 +59,15 @@ pg.psql:
 pg.proxy:
 	kubectl port-forward svc/pg-postgresql-headless -n kafka 5432:5432
 
+
+#### Grafana
+
+grafana.password:
+	kubectl get secret --namespace kafka grafana -o json | jq '.data["admin-password"] | @base64d' -r
+
+grafana.open:
+	open http://localhost:8083
+
 #### Other
 
 kube.proxy:

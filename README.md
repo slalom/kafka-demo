@@ -45,6 +45,12 @@
 3. Open new terminal tab
 4. `make confluent.open`
 
+### Grafana
+
+1. `make grafana.open`
+2. User: admin, password `make grafana.password`
+3. Import dashboard `grafana/kafka-dashboard`
+
 ### Python Twitter Publisher
 
 1. `make kube.proxy` if you don't have it running yet

@@ -51,11 +51,40 @@ resource "helm_release" "pg" {
   namespace  = "kafka"
 
   values = [
-    "${file("pg/pg-values.yaml")}"
+    "${file("pg/pg-values.yaml")}",
   ]
 
   set {
-    name = "persistence.enabled"
+    name  = "persistence.enabled"
     value = "false"
   }
 }
+
+resource "helm_release" "prometheus" {
+  name       = "prometheus"
+  repository = "${data.helm_repository.stable.metadata.0.name}"
+  chart      = "prometheus"
+  namespace  = "kafka"
+}
+
+resource "helm_release" "grafana" {
+  name       = "grafana"
+  repository = "${data.helm_repository.stable.metadata.0.name}"
+  chart      = "grafana"
+  namespace  = "kafka"
+
+  values = [
+    "${file("grafana/values.yaml")}",
+  ]
+
+  set {
+    name  = "service.type"
+    value = "LoadBalancer"
+  }
+
+  set {
+    name  = "service.port"
+    value = "8083"
+  }
+}
+
