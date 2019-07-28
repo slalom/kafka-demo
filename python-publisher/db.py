@@ -1,6 +1,6 @@
 import psycopg2
 
-hostname = 'localhost'
+hostname = 'pg-postgresql'
 username = 'postgres'
 password = 'pg'
 database = 'sfdata'
@@ -11,6 +11,5 @@ cur = conn.cursor()
 
 def insert(message):
   text = message.message["text"]
-  country = message.message["place"]["country"]
-
+  country = message.message["place"] and message.message["place"]["country"] or "Unknown"
   cur.execute( "INSERT INTO tweets (text, country) VALUES (%s, %s)", (text, country) )

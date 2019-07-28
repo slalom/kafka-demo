@@ -42,6 +42,16 @@ resource "helm_release" "publisher" {
     name  = "image.repository"
     value = "sfo/python-publisher"
   }
+
+  set {
+    name  = "service.type"
+    value = "LoadBalancer"
+  }
+
+  set {
+    name  = "service.port"
+    value = "3000"
+  }
 }
 
 resource "helm_release" "pg" {

@@ -43,10 +43,10 @@ publisher.update: publisher.build
 	terraform apply -auto-approve
 
 publisher.start:
-	curl -s http://localhost:8001/api/v1/namespaces/kafka/services/http:publisher-python-app:http/proxy/twitter/on
+	curl -s http://localhost:3000/twitter/on
 
 publisher.stop:
-	curl -s http://localhost:8001/api/v1/namespaces/kafka/services/http:publisher-python-app:http/proxy/twitter/off
+	curl -s http://localhost:3000/twitter/off
 
 publisher.logs:
 	kubectl get pods --selector=app.kubernetes.io/instance=publisher -n kafka -o json | jq '.items[0].metadata.name' -r | xargs kubectl logs -f -n kafka
