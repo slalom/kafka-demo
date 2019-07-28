@@ -15,4 +15,13 @@ postgresqlPassword: pg
 ##
 postgresqlDatabase: sfdata
 
+initdbScripts:
+  db-init.sql: |
+    CREATE TABLE tweets (
+    id serial PRIMARY KEY,
+    first text,
+    last text,
+    datetime text DEFAULT now()
+    );
+
 

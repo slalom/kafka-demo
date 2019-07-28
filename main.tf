@@ -53,4 +53,9 @@ resource "helm_release" "pg" {
   values = [
     "${file("pg/pg-values.yaml")}"
   ]
+
+  set {
+    name = "persistence.enabled"
+    value = "false"
+  }
 }
