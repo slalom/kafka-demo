@@ -14,13 +14,24 @@ jenkins.password:
 jenkins.open:
 	open http://localhost:8081
 
-#### Confluent
+#### Confluent Control Center
 
-confluent.proxy:
+control-center.proxy:
 	kubectl port-forward svc/confluent-cp-control-center 9021:9021 -n kafka
 
-confluent.open:
+control-center.open:
 	open http://localhost:9021
+
+#### Confluent Kafka Connect
+
+kafka-connect.pg-connector.add:
+	curl -d @pg/pg-jdbc-connector.json -H "Content-Type: application/json" -X POST http://localhost:8001/api/v1/namespaces/kafka/services/http:confluent-cp-kafka-connect:kafka-connect/proxy/connectors
+
+kafka-connect.pg-connector.status:
+	curl http://localhost:8001/api/v1/namespaces/kafka/services/http:confluent-cp-kafka-connect:kafka-connect/proxy/connectors/pg-connector/status | jq
+
+kafka-connect.pg-connector.delete:
+	curl -X DELETE http://localhost:8001/api/v1/namespaces/kafka/services/http:confluent-cp-kafka-connect:kafka-connect/proxy/connectors/pg-connector
 
 #### Python Publisher
 
