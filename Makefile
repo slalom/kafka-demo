@@ -17,10 +17,10 @@ jenkins.open:
 #### Confluent
 
 confluent.proxy:
-	kubectl port-forward svc/confluent-cp-control-center 8080:9021 -n kafka
+	kubectl port-forward svc/confluent-cp-control-center 9021:9021 -n kafka
 
 confluent.open:
-	open http://localhost:8080
+	open http://localhost:9021
 
 #### Python Publisher
 
