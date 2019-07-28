@@ -5,7 +5,7 @@
         "connection.url": "jdbc:postgresql://pg-postgresql:5432/sfdata",
         "connection.user": "postgres",
         "connection.password": "pg",
-        "table.whitelist": "people",
+        "table.whitelist": "tweets",
         "mode": "incrementing",
         "incrementing.column.name": "id",
         "topic.prefix": "pg"
