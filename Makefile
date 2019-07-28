@@ -51,6 +51,14 @@ publisher.stop:
 publisher.logs:
 	kubectl get pods --selector=app.kubernetes.io/instance=publisher -n kafka -o json | jq '.items[0].metadata.name' -r | xargs kubectl logs -f -n kafka
 
+#### PostgreSQL
+
+pg.psql:
+	kubectl exec -it pg-postgresql-0 psql -n kafka -- -U postgres sfdata
+
+pg.proxy:
+	kubectl port-forward svc/pg-postgresql-headless -n kafka 5432:5432
+
 #### Other
 
 kube.proxy:
@@ -58,6 +66,3 @@ kube.proxy:
 
 consumer.twitter:
 	kubectl exec -c cp-kafka-broker -it confluent-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --topic twitter
-
-psql:
-	kubectl exec -it pg-postgresql-0 psql -n kafka -- -U postgres sfdata
