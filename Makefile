@@ -1,3 +1,7 @@
+provision: tf.apply twitter-forwarder.build streams.build connectors.add.both
+
+tf.apply:
+	terraform apply --auto-approve
 #### Kube Dashboard
 
 dashboard.token:
@@ -24,6 +28,12 @@ control-center.open:
 
 #### Confluent Kafka Connect
 
+connectors.wait.for.confluent:
+	bash -c 'while [[ `curl http://localhost:8001/api/v1/namespaces/kafka/services/http:confluent-cp-kafka-connect:kafka-connect/proxy/connectors/ -s -o /dev/null -w ''%{http_code}''` != "200" ]]; do sleep 5; done'
+
+connector.list:
+	curl -s http://localhost:8001/api/v1/namespaces/kafka/services/http:confluent-cp-kafka-connect:kafka-connect/proxy/connectors/ | jq
+
 connector.source.add:
 	curl -d @pg/pg-source.json -H "Content-Type: application/json" -X POST http://localhost:8001/api/v1/namespaces/kafka/services/http:confluent-cp-kafka-connect:kafka-connect/proxy/connectors
 
@@ -32,6 +42,17 @@ connector.source.status:
 
 connector.source.delete:
 	curl -X DELETE http://localhost:8001/api/v1/namespaces/kafka/services/http:confluent-cp-kafka-connect:kafka-connect/proxy/connectors/pg-source
+
+connector.sink.add:
+	curl -d @pg/pg-sink.json -H "Content-Type: application/json" -X POST http://localhost:8001/api/v1/namespaces/kafka/services/http:confluent-cp-kafka-connect:kafka-connect/proxy/connectors
+
+connector.sink.status:
+	curl http://localhost:8001/api/v1/namespaces/kafka/services/http:confluent-cp-kafka-connect:kafka-connect/proxy/connectors/pg-sink/status | jq
+
+connector.sink.delete:
+	curl -X DELETE http://localhost:8001/api/v1/namespaces/kafka/services/http:confluent-cp-kafka-connect:kafka-connect/proxy/connectors/pg-sink
+
+connectors.add.both: connectors.wait.for.confluent connector.source.add connector.sink.add
 
 #### Twitter Forwarder
 

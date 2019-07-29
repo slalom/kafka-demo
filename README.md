@@ -17,9 +17,7 @@
 
 ### Provisioning
 
-1. `make twitter-forwarder.build`
-2. `make streams.build`
-3. `terraform apply`
+1. `make provision`
 
 ### Twitter forwarder
 
