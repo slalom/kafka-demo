@@ -17,7 +17,9 @@
 
 ### Provisioning
 
-1. `terraform apply`
+1. `make twitter-forwarder.build`
+2. `make streams.build`
+3. `terraform apply`
 
 ## Accessing services
 
@@ -41,9 +43,9 @@
 ### Confluent platform
 
 1. Wait a few minutes for the service to come up
-2. `make confluent.proxy`
+2. `make control-center.proxy.proxy`
 3. Open new terminal tab
-4. `make confluent.open`
+4. `make control-center.proxy.open`
 
 ### Grafana
 
@@ -51,12 +53,11 @@
 2. User: admin, password `make grafana.password`
 3. Import dashboard `grafana/kafka-dashboard`
 
-### Python Twitter Publisher
+### Twitter forwarder
 
-1. `make kube.proxy` if you don't have it running yet
-2. `make publisher.start` to start feeding Twitter messages to the topic
-3. `make publisher.stop` to... stop
-
+1. `make connector.add`
+2. `make twitter-forwarder.start` to start feeding Twitter messages to the database
+3. `make twitter-forwarder.stop` to... stop
 
 ### Console consumer for Twitter feed
 
