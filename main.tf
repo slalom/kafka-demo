@@ -30,30 +30,6 @@ resource "helm_release" "confluent" {
   namespace  = "kafka"
 }
 
-resource "helm_release" "publisher" {
-  depends_on = ["helm_release.confluent"]
-
-  name       = "publisher"
-  repository = "./"
-  chart      = "python-chart"
-  namespace  = "kafka"
-
-  set {
-    name  = "image.repository"
-    value = "sfo/python-publisher"
-  }
-
-  set {
-    name  = "service.type"
-    value = "LoadBalancer"
-  }
-
-  set {
-    name  = "service.port"
-    value = "3000"
-  }
-}
-
 resource "helm_release" "pg" {
   name       = "pg"
   repository = "${data.helm_repository.stable.metadata.0.name}"
@@ -70,31 +46,85 @@ resource "helm_release" "pg" {
   }
 }
 
-resource "helm_release" "prometheus" {
-  name       = "prometheus"
-  repository = "${data.helm_repository.stable.metadata.0.name}"
-  chart      = "prometheus"
-  namespace  = "kafka"
+# resource "helm_release" "prometheus" {
+#   name       = "prometheus"
+#   repository = "${data.helm_repository.stable.metadata.0.name}"
+#   chart      = "prometheus"
+#   namespace  = "kafka"
+# }
+
+# resource "helm_release" "grafana" {
+#   name       = "grafana"
+#   repository = "${data.helm_repository.stable.metadata.0.name}"
+#   chart      = "grafana"
+#   namespace  = "kafka"
+
+#   values = [
+#     "${file("grafana/values.yaml")}",
+#   ]
+
+#   set {
+#     name  = "service.type"
+#     value = "LoadBalancer"
+#   }
+
+#   set {
+#     name  = "service.port"
+#     value = "8083"
+#   }
+# }
+
+
+provider "kubernetes" {
 }
 
-resource "helm_release" "grafana" {
-  name       = "grafana"
-  repository = "${data.helm_repository.stable.metadata.0.name}"
-  chart      = "grafana"
-  namespace  = "kafka"
-
-  values = [
-    "${file("grafana/values.yaml")}",
-  ]
-
-  set {
-    name  = "service.type"
-    value = "LoadBalancer"
+resource "kubernetes_pod" "twitter-forwarder" {
+  metadata {
+    name = "twitter-forwarder"
+    namespace = "kafka"
+    labels = {
+      app = "twitter-forwarder"
+    }
   }
 
-  set {
-    name  = "service.port"
-    value = "8083"
+  spec {
+    container {
+      image = "sfo/python-publisher"
+      image_pull_policy = "IfNotPresent"
+      name  = "twitter-forwarder-1"
+    }
   }
 }
 
+resource "kubernetes_pod" "kafka-stream" {
+  metadata {
+    name = "kafka-stream"
+    namespace = "kafka"
+  }
+
+  spec {
+    container {
+      image = "sfo/kafka-streams"
+      image_pull_policy = "IfNotPresent"
+      name  = "kafka-streams-1"
+    }
+  }
+}
+
+resource "kubernetes_service" "twitter-forwarder" {
+  metadata {
+    name = "twitter-forwarder"
+    namespace = "kafka"
+  }
+  spec {
+    selector = {
+      app = "${kubernetes_pod.twitter-forwarder.metadata.0.labels.app}"
+    }
+    port {
+      port        = 3000
+      target_port = 80
+    }
+
+    type = "LoadBalancer"
+  }
+}

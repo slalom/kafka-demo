@@ -49,7 +49,25 @@ publisher.stop:
 	curl -s http://localhost:3000/twitter/off
 
 publisher.logs:
-	kubectl get pods --selector=app.kubernetes.io/instance=publisher -n kafka -o json | jq '.items[0].metadata.name' -r | xargs kubectl logs -f -n kafka
+	kubectl logs twitter-forwarder -f -n kafka
+
+#### Streams App
+
+streams.build:
+	docker build python-streams -t sfo/python-streams
+
+streams.update: streams.build
+	terraform taint helm_release.streams-app && \
+	terraform apply -auto-approve
+
+streams.start:
+	curl -s http://localhost:3000/twitter/on
+
+streams.stop:
+	curl -s http://localhost:3000/twitter/off
+
+streams.logs:
+	kubectl get pods --selector=app.kubernetes.io/instance=streams-app -n kafka -o json | jq '.items[0].metadata.name' -r | xargs kubectl logs -f -n kafka
 
 #### PostgreSQL
 
