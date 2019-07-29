@@ -21,6 +21,13 @@
 2. `make streams.build`
 3. `terraform apply`
 
+### Twitter forwarder
+
+1. `make kube.proxy`
+2. `make connector.add`
+3. `make twitter-forwarder.start` to start feeding Twitter messages to the database
+4. `make twitter-forwarder.stop` to... stop
+
 ## Accessing services
 
 ### Kube dashboard
@@ -52,12 +59,6 @@
 1. `make grafana.open`
 2. User: admin, password `make grafana.password`
 3. Import dashboard `grafana/kafka-dashboard`
-
-### Twitter forwarder
-
-1. `make connector.add`
-2. `make twitter-forwarder.start` to start feeding Twitter messages to the database
-3. `make twitter-forwarder.stop` to... stop
 
 ### Console consumer for Twitter feed
 

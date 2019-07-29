@@ -85,6 +85,15 @@ grafana.open:
 kube.proxy:
 	kubectl proxy
 
+kube.list.svc:
+	kubectl get svc -n kafka
+
+kube.list.pods:
+	kubectl get pods -n kafka
+
+confluent.logs:
+	kubectl logs confluent-cp-kafka-0 -c cp-kafka-broker -n kafka -f
+
 consumer.twitter:
 	kubectl exec -c cp-kafka-broker -it confluent-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --property schema.registry.url=http://confluent-cp-schema-registry:8081 --topic pgtweets
 
