@@ -5,11 +5,13 @@ plugins {
 
 repositories {
     jcenter()
+    maven { url 'https://packages.confluent.io/maven/' }
 }
 
 dependencies {
     compile 'org.apache.kafka:kafka-streams:2.0.0'
     compile 'org.apache.kafka:kafka-clients:2.0.0'
+    compile 'io.confluent:kafka-streams-avro-serde:5.0.0'
     compile 'org.slf4j:slf4j-api:1.7.26'
     compile 'org.slf4j:slf4j-log4j12:1.7.26'
 }

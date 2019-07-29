@@ -98,4 +98,11 @@ consumer.twitter:
 	kubectl exec -c cp-kafka-broker -it confluent-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --property schema.registry.url=http://confluent-cp-schema-registry:8081 --topic pgtweets
 
 consumer.counts:
-	kubectl exec -c cp-kafka-broker -it confluent-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --property schema.registry.url=http://confluent-cp-schema-registry:8081 --topic tweet-countries-topic
+	kubectl exec -c cp-kafka-broker -it confluent-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer \
+		--bootstrap-server localhost:9092 \
+		--topic tweet-countries-topic \
+		--formatter kafka.tools.DefaultMessageFormatter \
+    --property print.key=true \
+    --property print.value=true \
+    --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer \
+    --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer

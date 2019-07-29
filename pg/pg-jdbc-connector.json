@@ -8,6 +8,10 @@
         "table.whitelist": "tweets",
         "mode": "incrementing",
         "incrementing.column.name": "id",
-        "topic.prefix": "pg"
+        "topic.prefix": "pg",
+        "key.converter": "io.confluent.connect.avro.AvroConverter",
+        "value.converter": "io.confluent.connect.avro.AvroConverter",
+        "key.converter.schema.registry.url": "http://confluent-cp-schema-registry:8081",
+        "value.converter.schema.registry.url": "http://confluent-cp-schema-registry:8081"
     }
 }
