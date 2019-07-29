@@ -32,7 +32,7 @@
 
 ### Kube dashboard
 
-1. `make kube.proxy`
+1. `make kube.proxy` if not running yet
 2. Open new terminal tab
 3. `make dashboard.token`
 4. `make dashboard.open`
@@ -50,9 +50,9 @@
 ### Confluent platform
 
 1. Wait a few minutes for the service to come up
-2. `make control-center.proxy.proxy`
+2. `make control-center.proxy`
 3. Open new terminal tab
-4. `make control-center.proxy.open`
+4. `make control-center.open`
 
 ### Grafana
 
