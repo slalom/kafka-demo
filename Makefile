@@ -33,22 +33,22 @@ kafka-connect.pg-connector.status:
 kafka-connect.pg-connector.delete:
 	curl -X DELETE http://localhost:8001/api/v1/namespaces/kafka/services/http:confluent-cp-kafka-connect:kafka-connect/proxy/connectors/pg-connector
 
-#### Python Publisher
+#### Twitter Forwarder
 
-publisher.build:
-	docker build python-publisher -t sfo/python-publisher
+twitter-forwarder.build:
+	docker build twitter-forwarder -t sfo/twitter-forwarder
 
-publisher.update: publisher.build
-	terraform taint helm_release.publisher && \
+twitter-forwarder.update: twitter-forwarder.build
+	terraform taint kubernetes_pod.twitter-forwarder && \
 	terraform apply -auto-approve
 
-publisher.start:
+twitter-forwarder.start:
 	curl -s http://localhost:3000/twitter/on
 
-publisher.stop:
+twitter-forwarder.stop:
 	curl -s http://localhost:3000/twitter/off
 
-publisher.logs:
+twitter-forwarder.logs:
 	kubectl logs twitter-forwarder -f -n kafka
 
 #### Streams App
