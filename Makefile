@@ -1,4 +1,4 @@
-provision: tf.apply twitter-forwarder.build streams.build connectors.add.both
+provision: tf.apply twitter-forwarder.build streams.build connectors.add.both twitter-forwarder.start
 
 tf.apply:
 	terraform apply --auto-approve

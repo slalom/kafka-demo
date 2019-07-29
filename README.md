@@ -18,6 +18,9 @@
 ### Provisioning
 
 1. `make provision`
+2. `make kube.proxy`
+3. `make control-center.proxy`
+4. `make control-center.open`
 
 ### Twitter forwarder
 
