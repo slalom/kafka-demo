@@ -5,29 +5,44 @@ data "helm_repository" "stable" {
   url  = "https://kubernetes-charts.storage.googleapis.com"
 }
 
-resource "helm_release" "jenkins" {
-  name       = "jenkins"
-  repository = "${data.helm_repository.stable.metadata.0.name}"
-  chart      = "jenkins"
-  namespace  = "kafka"
+# resource "helm_release" "jenkins" {
+#   name       = "jenkins"
+#   repository = "${data.helm_repository.stable.metadata.0.name}"
+#   chart      = "jenkins"
+#   namespace  = "kafka"
 
-  set {
-    name  = "master.servicePort"
-    value = "8081"
-  }
-}
+#   set {
+#     name  = "master.servicePort"
+#     value = "8081"
+#   }
+# }
 
-resource "helm_release" "kube-dashboard" {
-  name       = "kube-dashboard"
-  repository = "${data.helm_repository.stable.metadata.0.name}"
-  chart      = "kubernetes-dashboard"
-}
+# resource "helm_release" "kube-dashboard" {
+#   name       = "kube-dashboard"
+#   repository = "${data.helm_repository.stable.metadata.0.name}"
+#   chart      = "kubernetes-dashboard"
+# }
 
 resource "helm_release" "confluent" {
   name       = "confluent"
   repository = "./"
   chart      = "cp-helm-charts"
   namespace  = "kafka"
+
+  set {
+    name  = "cp-kafka.persistence.enabled"
+    value = "false"
+  }
+
+  set {
+    name  = "cp-zookeeper.persistence.enabled"
+    value = "false"
+  }
+
+  set {
+    name  = "cp-zookeeper.servers"
+    value = "1"
+  }
 }
 
 resource "helm_release" "pg" {
