@@ -18,14 +18,14 @@ public class SfoDemo {
 
         Properties config = new Properties();
         config.put(StreamsConfig.APPLICATION_ID_CONFIG, "sfo-demo-app-id");
-        config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "confluent-cp-kafka:9092");
         config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
         StreamsBuilder builder = new StreamsBuilder();
         // 1 - Stream from Kafka
-        KStream<String, String> wordCountInput = builder.stream("word-count-input");
+        KStream<String, String> wordCountInput = builder.stream("pgtweets");
         // 2 - map values to lower case
 
         KTable<String, Long> wordCounts = wordCountInput.mapValues(value -> value.toLowerCase())

@@ -96,21 +96,6 @@ resource "kubernetes_pod" "twitter-forwarder" {
   }
 }
 
-resource "kubernetes_pod" "kafka-stream" {
-  metadata {
-    name = "kafka-stream"
-    namespace = "kafka"
-  }
-
-  spec {
-    container {
-      image = "sfo/kafka-streams"
-      image_pull_policy = "IfNotPresent"
-      name  = "kafka-streams-1"
-    }
-  }
-}
-
 resource "kubernetes_service" "twitter-forwarder" {
   metadata {
     name = "twitter-forwarder"
@@ -126,5 +111,20 @@ resource "kubernetes_service" "twitter-forwarder" {
     }
 
     type = "LoadBalancer"
+  }
+}
+
+resource "kubernetes_pod" "kafka-streams" {
+  metadata {
+    name = "kafka-streams"
+    namespace = "kafka"
+  }
+
+  spec {
+    container {
+      image = "sfo/kafka-streams"
+      image_pull_policy = "IfNotPresent"
+      name  = "kafka-streams-1"
+    }
   }
 }
