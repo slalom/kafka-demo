@@ -24,13 +24,13 @@ control-center.open:
 
 #### Confluent Kafka Connect
 
-kafka-connect.pg-connector.add:
+connector.add:
 	curl -d @pg/pg-jdbc-connector.json -H "Content-Type: application/json" -X POST http://localhost:8001/api/v1/namespaces/kafka/services/http:confluent-cp-kafka-connect:kafka-connect/proxy/connectors
 
-kafka-connect.pg-connector.status:
+connector.status:
 	curl http://localhost:8001/api/v1/namespaces/kafka/services/http:confluent-cp-kafka-connect:kafka-connect/proxy/connectors/pg-connector/status | jq
 
-kafka-connect.pg-connector.delete:
+connector.delete:
 	curl -X DELETE http://localhost:8001/api/v1/namespaces/kafka/services/http:confluent-cp-kafka-connect:kafka-connect/proxy/connectors/pg-connector
 
 #### Twitter Forwarder
@@ -86,4 +86,7 @@ kube.proxy:
 	kubectl proxy
 
 consumer.twitter:
-	kubectl exec -c cp-kafka-broker -it confluent-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --topic pgtweets
+	kubectl exec -c cp-kafka-broker -it confluent-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --property schema.registry.url=http://confluent-cp-schema-registry:8081 --topic pgtweets
+
+consumer.counts:
+	kubectl exec -c cp-kafka-broker -it confluent-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --property schema.registry.url=http://confluent-cp-schema-registry:8081 --topic tweet-countries-topic
