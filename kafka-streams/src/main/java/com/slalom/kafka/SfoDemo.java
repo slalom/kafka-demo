@@ -11,7 +11,6 @@ import org.apache.kafka.streams.kstream.Produced;
 
 import java.util.Map;
 import java.util.Properties;
-import java.util.regex.Pattern;
 
 public class SfoDemo {
 
