@@ -23,5 +23,9 @@ initdbScripts:
     country text,
     datetime text DEFAULT now()
     );
+    CREATE TABLE counts (
+    country text PRIMARY KEY,
+    count integer
+    );
 
 

@@ -1,5 +1,5 @@
 {
-    "name": "pg-connector",
+    "name": "pg-source",
     "config": {
         "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
         "connection.url": "jdbc:postgresql://pg-postgresql:5432/sfdata",

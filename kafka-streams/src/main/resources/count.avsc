@@ -1,0 +1,7 @@
+{"namespace": "com.slalom.kafka",
+ "type": "record",
+ "name": "Count",
+ "fields": [
+     {"name": "count", "type": "long"}
+ ]
+}

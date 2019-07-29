@@ -1,6 +1,9 @@
 package com.slalom.kafka;
 
 import io.confluent.kafka.streams.serdes.avro.GenericAvroSerde;
+import org.apache.avro.Schema;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
@@ -9,12 +12,13 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.Produced;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
 public class SfoDemo {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         Properties config = new Properties();
         config.put(StreamsConfig.APPLICATION_ID_CONFIG, "sfo-demo-app-id");
@@ -31,12 +35,22 @@ public class SfoDemo {
 
         StreamsBuilder builder = new StreamsBuilder();
 
+        final Schema schema = new Schema.Parser().parse(
+                    SfoDemo.class.getResourceAsStream("/count.avsc")
+            );
+
         builder.stream("pgtweets", Consumed.with(Serdes.String(), avroSerde))
                 .mapValues(value -> value.get("country").toString())
                 .groupBy((keyIgnored, word) -> word)
                 .count()
                 .filter((word, count) -> count > 0)
-                .toStream().to("tweet-countries-topic", Produced.with(Serdes.String(), Serdes.Long()));
+                .mapValues(count -> {
+                    final GenericRecord record = new GenericData.Record(schema);
+                    record.put("count", count);
+                    return record;
+
+                })
+                .toStream().to("counts", Produced.with(Serdes.String(), avroSerde));
 
 
         KafkaStreams streams = new KafkaStreams(builder.build(), config);
