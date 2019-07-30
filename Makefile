@@ -114,7 +114,7 @@ pg.psql:
 	kubectl exec -it pg-postgresql-0 -n kafka -- sh -c 'PGPASSWORD=pg psql -U postgres sfdata'
 
 pg.tweets.select:
-	kubectl exec -it pg-postgresql-0 -n kafka -- sh -c 'PGPASSWORD=pg psql -U postgres sfdata -c "select * from tweets;"'
+	kubectl exec -it pg-postgresql-0 -n kafka -- sh -c 'PGPASSWORD=pg psql -U postgres sfdata -c "select * from tweets limit 2;"'
 
 pg.tweets.count:
 	kubectl exec -it pg-postgresql-0 -n kafka -- sh -c 'PGPASSWORD=pg psql -U postgres sfdata -c "select count(*) from tweets;"'
