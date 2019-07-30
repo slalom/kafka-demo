@@ -87,11 +87,10 @@ streams.logs:
 #### PostgreSQL
 
 pg.psql:
-	kubectl exec -it pg-postgresql-0 psql -n kafka -- -U postgres sfdata
+	kubectl exec -it pg-postgresql-0 -n kafka -- sh -c 'PGPASSWORD=pg psql -U postgres sfdata'
 
-pg.proxy:
-	kubectl port-forward svc/pg-postgresql-headless -n kafka 5432:5432
-
+pg.counts:
+	kubectl exec -it pg-postgresql-0 -n kafka -- sh -c 'PGPASSWORD=pg psql -U postgres sfdata -c "select * from counts order by count desc;"'
 
 #### Grafana
 
