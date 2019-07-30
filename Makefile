@@ -139,9 +139,13 @@ confluent.logs:
 	kubectl logs confluent-cp-kafka-0 -c cp-kafka-broker -n kafka -f
 
 consumer.tweets:
-	kubectl exec -c cp-kafka-broker -it confluent-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer \
-		--bootstrap-server localhost:9092 \
-		--topic pgtweets
+	POD=`kubectl get pod -n kafka -l app=cp-schema-registry -o json | jq '.items[0].metadata.name' -r` && \
+	kubectl exec -c cp-schema-registry-server -it $$POD -n kafka -- /bin/bash -c "unset JMX_PORT && /usr/bin/kafka-avro-console-consumer \
+		--bootstrap-server confluent-cp-kafka:9092 \
+		--topic pgtweets \
+		--property print.key=true \
+		--property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer \
+    --property schema.registry.url=http://confluent-cp-schema-registry:8081"
 
 consumer.word_count:
 	kubectl exec -c cp-kafka-broker -it confluent-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer \
