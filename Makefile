@@ -1,14 +1,29 @@
+#### Main
+
 provision: tf.apply twitter-forwarder.build streams.build connectors.add.both twitter-forwarder.start
 
 tf.apply:
-	terraform apply --auto-approve
+	terraform apply --auto-approve terraform
+
 #### Kube Dashboard
 
-dashboard.token:
-	kubectl get serviceaccounts kube-dashboard-kubernetes-dashboard -o json | jq '.secrets[0].name' -r | xargs kubectl get secret -o json | jq '.data.token | @base64d' -r
+dashboard.install:
+	helm install stable/kubernetes-dashboard --name kube-dashboard
 
-dashboard.open:
+dashboard.delete:
+	helm delete kube-dashboard
+
+dashboard.token:
+	kubectl get serviceaccounts kube-dashboard-kubernetes-dashboard -o json | jq '.secrets[0].name' -r | xargs kubectl get secret -o json | jq '.data.token | @base64d' -r | pbcopy
+
+dashboard.open: dashboard.token
 	open http://localhost:8001/api/v1/namespaces/default/services/https:kube-dashboard-kubernetes-dashboard:https/proxy/#!/overview?namespace=default
+
+#### Confluent Control Center
+
+control-center.open:
+	open http://localhost:9021 && \
+	kubectl port-forward svc/confluent-cp-control-center 9021:9021 -n kafka
 
 #### Jenkins
 
@@ -17,14 +32,6 @@ jenkins.password:
 
 jenkins.open:
 	open http://localhost:8081
-
-#### Confluent Control Center
-
-control-center.proxy:
-	kubectl port-forward svc/confluent-cp-control-center 9021:9021 -n kafka
-
-control-center.open:
-	open http://localhost:9021
 
 #### Confluent Kafka Connect
 
@@ -61,7 +68,7 @@ twitter-forwarder.build:
 
 twitter-forwarder.update: twitter-forwarder.build
 	terraform taint kubernetes_pod.twitter-forwarder && \
-	terraform apply -auto-approve
+	terraform apply -auto-approve terraform
 
 twitter-forwarder.start:
 	curl -s http://localhost:3000/twitter/on
@@ -72,6 +79,20 @@ twitter-forwarder.stop:
 twitter-forwarder.logs:
 	kubectl logs twitter-forwarder -f -n kafka
 
+
+#### Tweets Transformer
+
+tweets-transformation.build:
+	docker build tweets-transformation -t sfo/tweets-transformation
+
+tweets-transformation.update: tweets-transformation.build
+	terraform taint kubernetes_pod.tweets-transformation && \
+	terraform apply -auto-approve terraform
+
+tweets-transformation.logs:
+	kubectl logs tweets-transformation -f -n kafka
+
+
 #### Streams App
 
 streams.build:
@@ -79,7 +100,7 @@ streams.build:
 
 streams.update: streams.build
 	terraform taint kubernetes_pod.kafka-streams && \
-	terraform apply -auto-approve
+	terraform apply -auto-approve terraform
 
 streams.logs:
 	kubectl logs kafka-streams -f -n kafka
@@ -122,7 +143,7 @@ consumer.twitter:
 consumer.counts:
 	kubectl exec -c cp-kafka-broker -it confluent-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer \
 		--bootstrap-server localhost:9092 \
-		--topic tweet-countries-topic \
+		--topic counts \
 		--formatter kafka.tools.DefaultMessageFormatter \
     --property print.key=true \
     --property print.value=true \

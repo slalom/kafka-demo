@@ -13,7 +13,13 @@
 ### Prep
 
 1. Get your local Kube up and running
-2. `terraform init`
+2. `terraform init terraform`
+3. `make kube.proxy`
+
+### Kube dashboard
+
+1. `make dashboard.open`. This will open the web app and put the token in your clipboard
+2. Use the token from your clipboard
 
 ### Provisioning
 
@@ -30,15 +36,6 @@
 4. `make twitter-forwarder.stop` to... stop
 
 ## Accessing services
-
-### Kube dashboard
-
-1. `make kube.proxy` if not running yet
-2. Open new terminal tab
-3. `make dashboard.token`
-4. `make dashboard.open`
-5. Use the token from previous step for authentication
-
 
 ### Jenkins
 

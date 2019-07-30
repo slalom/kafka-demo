@@ -41,9 +41,9 @@ public class SfoDemo {
 
         builder.stream("pgtweets", Consumed.with(Serdes.String(), avroSerde))
                 .mapValues(value -> value.get("country").toString())
-                .groupBy((keyIgnored, word) -> word)
+                .groupBy((keyIgnored, country) -> country)
                 .count()
-                .filter((word, count) -> count > 0)
+                .filter((country, count) -> count > 5)
                 .mapValues(count -> {
                     final GenericRecord record = new GenericData.Record(schema);
                     record.put("count", count);
