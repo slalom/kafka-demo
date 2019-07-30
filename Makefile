@@ -31,9 +31,9 @@ control-center.open:
 #### Jenkins
 
 jenkins.password:
-	kubectl get secret --namespace kafka jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode
+	kubectl get secret --namespace kafka jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode | pbcopy
 
-jenkins.open:
+jenkins.open: jenkins.password
 	open http://localhost:8081
 
 #### Confluent Kafka Connect
@@ -119,9 +119,9 @@ pg.counts:
 #### Grafana
 
 grafana.password:
-	kubectl get secret --namespace kafka grafana -o json | jq '.data["admin-password"] | @base64d' -r
+	kubectl get secret --namespace kafka grafana -o json | jq '.data["admin-password"] | @base64d' -r | pbcopy
 
-grafana.open:
+grafana.open: grafana.password
 	open http://localhost:8083
 
 #### Other
