@@ -38,8 +38,8 @@ class mythread(threading.Thread):
                 raise KafkaException(msg.error())
             else:
                 tweet_length = len(msg.value()['text'].split())
-                message = {'country': msg.value()['country'], 'words':tweet_length}
-                p.produce('word_count', json.dumps(message))
+                message = {'words':tweet_length}
+                p.produce('word_count', json.dumps(message), msg.value()['country'])
 
     except KeyboardInterrupt:
         print('Aborted by user\n')

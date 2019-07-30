@@ -5,6 +5,9 @@ provision: tf.apply twitter-forwarder.build streams.build connectors.add.both tw
 tf.apply:
 	terraform apply --auto-approve terraform
 
+tf.destroy:
+	terraform destroy
+
 #### Kube Dashboard
 
 dashboard.install:
@@ -135,17 +138,22 @@ kube.list.pods:
 confluent.logs:
 	kubectl logs confluent-cp-kafka-0 -c cp-kafka-broker -n kafka -f
 
-consumer.twitter:
+consumer.tweets:
 	kubectl exec -c cp-kafka-broker -it confluent-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer \
 		--bootstrap-server localhost:9092 \
 		--topic pgtweets
 
-consumer.counts:
+consumer.word_count:
 	kubectl exec -c cp-kafka-broker -it confluent-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer \
 		--bootstrap-server localhost:9092 \
+		--property print.key=true \
+		--topic word_count
+
+consumer.count_by_country:
+	POD=`kubectl get pod -n kafka -l app=cp-schema-registry -o json | jq '.items[0].metadata.name' -r` && \
+	kubectl exec -c cp-schema-registry-server -it $$POD -n kafka -- /bin/bash -c "unset JMX_PORT && /usr/bin/kafka-avro-console-consumer \
+		--bootstrap-server confluent-cp-kafka:9092 \
 		--topic counts \
-		--formatter kafka.tools.DefaultMessageFormatter \
-    --property print.key=true \
-    --property print.value=true \
-    --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer \
-    --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer
+		--property print.key=true \
+		--property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer \
+    --property schema.registry.url=http://confluent-cp-schema-registry:8081"
