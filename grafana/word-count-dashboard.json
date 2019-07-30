@@ -110,7 +110,7 @@
           "label": "",
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
@@ -166,5 +166,5 @@
   "timezone": "",
   "title": "Word counts",
   "uid": "b9rXEGvWk",
-  "version": 1
+  "version": 2
 }
