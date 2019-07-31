@@ -7,3 +7,12 @@ data "helm_repository" "stable" {
 
 provider "kubernetes" {
 }
+
+resource "kubernetes_namespace" "kafka" {
+  metadata {
+    name = "kafka"
+    annotations = {
+      name = "kafka"
+    }
+  }
+}
