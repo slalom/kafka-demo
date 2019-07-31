@@ -17,5 +17,5 @@ dependencies {
 }
 
 application {
-    mainClassName = 'com.slalom.kafka.KafkaStreams'
+    mainClassName = 'com.slalom.kafka.KafkaStreamsClient'
 }

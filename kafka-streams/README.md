@@ -40,6 +40,6 @@ Run a kafka consumer on `word-count-topic` to see the messages being word counte
 
  # How to edit the code?
 
- Open up the project and under src/main/java - there is a KafkaStreams class. This class is Java code and can be modified to read from Twitter or any other data source.
+ Open up the project and under src/main/java - there is a KafkaStreamsClient class. This class is Java code and can be modified to read from Twitter or any other data source.
 
 

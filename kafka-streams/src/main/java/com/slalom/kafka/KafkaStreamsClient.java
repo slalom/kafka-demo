@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
-public class KafkaStreams {
+public class KafkaStreamsClient {
 
     public static void main(String[] args) throws IOException {
 
@@ -37,7 +37,7 @@ public class KafkaStreams {
         StreamsBuilder builder = new StreamsBuilder();
 
         final Schema schema = new Schema.Parser().parse(
-                KafkaStreams.class.getResourceAsStream("/count.avsc")
+                KafkaStreamsClient.class.getResourceAsStream("/count.avsc")
         );
 
         ValueMapper<? super Long, ?> toAvroMessage = count -> {
