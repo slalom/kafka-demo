@@ -20,7 +20,7 @@ c = AvroConsumer({'bootstrap.servers': 'confluent-cp-kafka:9092',
 
 c.subscribe(['pgtweets'])
 
-def produce_message_with_schema(msg):
+def wrap_in_schema(msg):
     return {
         'schema': {
             'type': 'struct',
@@ -40,6 +40,11 @@ def produce_message_with_schema(msg):
         'payload': msg
     }
 
+def transform_message(input):
+    tweet_length = len(input.value()['text'].split())
+    message = {'words': tweet_length, 'created_at': input.value()['datetime']}
+    return json.dumps(wrap_in_schema(message))
+
 p = Producer({'bootstrap.servers': 'confluent-cp-kafka:9092'})
 
 class mythread(threading.Thread):
@@ -57,9 +62,9 @@ class mythread(threading.Thread):
             if msg.error():
                 raise KafkaException(msg.error())
             else:
-                tweet_length = len(msg.value()['text'].split())
-                message = {'words': tweet_length, 'created_at': msg.value()['datetime']}
-                p.produce('word_count', json.dumps(produce_message_with_schema(message)), msg.value()['country'])
+                output = transform_message(msg.value())
+                key = msg.value()['country']
+                p.produce('word_count', output, key)
 
     except KeyboardInterrupt:
         print('Aborted by user\n')
