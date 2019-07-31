@@ -25,7 +25,8 @@ public class SfoDemo {
         config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "confluent-cp-kafka:9092");
         config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
-        config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
+        config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, GenericAvroSerde.class);
+        config.put("schema.registry.url", "http://confluent-cp-schema-registry:8081");
         config.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 10 * 1000);
         config.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 0);
 
@@ -40,17 +41,10 @@ public class SfoDemo {
             );
 
         builder.stream("pgtweets", Consumed.with(Serdes.String(), avroSerde))
-                .mapValues(value -> value.get("country").toString())
-                .groupBy((keyIgnored, country) -> country)
+                .groupBy((keyIgnored, value) -> value.get("country").toString())
                 .count()
                 .filter((country, count) -> count > 5)
-                .mapValues(count -> {
-                    final GenericRecord record = new GenericData.Record(schema);
-                    record.put("count", count);
-                    return record;
-
-                })
-                .toStream().to("counts", Produced.with(Serdes.String(), avroSerde));
+                .toStream().to("counts");
 
 
         KafkaStreams streams = new KafkaStreams(builder.build(), config);
