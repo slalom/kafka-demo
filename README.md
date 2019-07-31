@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Docker with Kubernetes
+- Docker with Kubernetes (standard on Mac and Windows)
 - helm
 - terraform
 - jq (for parsing kubectl responses)
@@ -23,19 +23,24 @@
 
 ### Provisioning
 
-1. `make kube.proxy`
-2. `make provision`
-3. `make control-center.proxy`
-4. `make control-center.open`
+1. `make provision`
+
+## Accessing services
+
+### Control Center UI
+
+1. `make control-center.open`
+
+### Grafana
+
+1. `make grafana.open`. User: admin, password is in your clipboard.
 
 ### Twitter forwarder
 
-1. `make kube.proxy`
-2. `make connector.add`
-3. `make twitter-forwarder.start` to start feeding Twitter messages to the database
-4. `make twitter-forwarder.stop` to... stop
+The Twitter forwarder is started by default, but you can also stop it.
 
-## Accessing services
+1. `make twitter-forwarder.start` to start feeding Twitter messages to the database
+2. `make twitter-forwarder.stop` to... stop
 
 ### Jenkins
 
@@ -43,20 +48,6 @@
 2. `make jenkins.open`
 3. `make jenkins.password`
 4. Log in with user admin and password from the output above
-
-
-### Confluent platform
-
-1. Wait a few minutes for the service to come up
-2. `make control-center.proxy`
-3. Open new terminal tab
-4. `make control-center.open`
-
-### Grafana
-
-1. `make grafana.open`
-2. User: admin, password `make grafana.password`
-3. Import dashboard `grafana/kafka-dashboard`
 
 ### Console consumer for Twitter feed
 
