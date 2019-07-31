@@ -1,4 +1,4 @@
-# RFP Demo
+# Kafka Platform demonstration
 
 ## Prerequisites
 
