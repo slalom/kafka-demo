@@ -13,7 +13,7 @@ def ping():
     return "Pong"
 
 c = AvroConsumer({'bootstrap.servers': 'confluent-cp-kafka:9092',
-              'group.id': 'group-0',
+              'group.id': 'word-count-group',
               'session.timeout.ms': 6000,
               'schema.registry.url': 'http://confluent-cp-schema-registry:8081',
               'auto.offset.reset': 'earliest'})
