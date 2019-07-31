@@ -10,7 +10,7 @@ import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.Consumed;
-import org.apache.kafka.streams.kstream.Produced;
+import org.apache.kafka.streams.kstream.ValueMapper;
 
 import java.io.IOException;
 import java.util.Map;
@@ -37,13 +37,21 @@ public class SfoDemo {
         StreamsBuilder builder = new StreamsBuilder();
 
         final Schema schema = new Schema.Parser().parse(
-                    SfoDemo.class.getResourceAsStream("/count.avsc")
-            );
+                SfoDemo.class.getResourceAsStream("/count.avsc")
+        );
+
+        ValueMapper<? super Long, ?> toAvroMessage = count -> {
+            final GenericRecord record = new GenericData.Record(schema);
+            record.put("count", count);
+            return record;
+
+        };
 
         builder.stream("pgtweets", Consumed.with(Serdes.String(), avroSerde))
                 .groupBy((keyIgnored, value) -> value.get("country").toString())
                 .count()
                 .filter((country, count) -> count > 5)
+                .mapValues(toAvroMessage)
                 .toStream().to("counts");
 
 
