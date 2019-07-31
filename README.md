@@ -14,16 +14,21 @@
 
 1. Get your local Kube up and running
 2. `terraform init terraform`
-3. `make kube.proxy`
-
-### Kube dashboard
-
-1. `make dashboard.open`. This will open the web app and put the token in your clipboard
-2. Use the token from your clipboard
+3. `make kube.proxy` and keep it running on the side
 
 ### Provisioning
 
 1. `make provision`
+
+### Destroying
+
+1. `make tf.destroy`
+
+### Kube dashboard
+
+1. Install the dashboar (it's purposefully not part of the solution): `helm install stable/kubernetes-dashboard --name kube-dashboard`
+2. `make dashboard.open`. This will open the web app and put the token in your clipboard
+3. Use the token from your clipboard
 
 ## Accessing services
 
