@@ -1,5 +1,7 @@
 # Kafka Platform demonstration
 
+![Diagram](diagram.png)
+
 ## Prerequisites
 
 - Docker with Kubernetes (standard on Mac and Windows)
