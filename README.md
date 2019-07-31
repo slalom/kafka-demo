@@ -14,9 +14,10 @@
 
 ### Prep
 
-1. Get your local Kube up and running
-2. `terraform init terraform`
-3. `make kube.proxy` and keep it running on the side
+1. Get your local Kubernetes up and running
+2. Test it with `kubectl cluster-info`
+3. `terraform init terraform`
+4. `make kube.proxy` and keep it running on the side
 
 ### Provisioning
 
