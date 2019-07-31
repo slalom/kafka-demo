@@ -49,6 +49,7 @@ dashboards:
           "editable": true,
           "gnetId": null,
           "graphTooltip": 0,
+          "id": 1,
           "links": [],
           "panels": [
             {
@@ -168,8 +169,8 @@ dashboards:
             "list": []
           },
           "time": {
-            "from": "now-5m",
-            "to": "now"
+            "from": "now/d",
+            "to": "now/d"
           },
           "timepicker": {
             "refresh_intervals": [
