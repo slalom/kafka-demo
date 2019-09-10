@@ -3,6 +3,7 @@ resource "helm_release" "pg" {
   repository = "${data.helm_repository.stable.metadata.0.name}"
   chart      = "postgresql"
   namespace  = "kafka"
+  timeout    = 600
 
   values = [
     "${file("pg/pg-values.yaml")}",

@@ -1,6 +1,6 @@
 # resource "helm_release" "jenkins" {
 #   name       = "jenkins"
-#   repository = "${data.helm_repository.stable.metadata.0.name}"
+#   repository = "../${data.helm_repository.stable.metadata.0.name}"
 #   chart      = "jenkins"
 #   namespace  = "kafka"
 

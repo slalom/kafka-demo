@@ -3,6 +3,7 @@ resource "helm_release" "prometheus" {
   repository = "${data.helm_repository.stable.metadata.0.name}"
   chart      = "prometheus"
   namespace  = "kafka"
+  timeout    = 600
 }
 
 resource "helm_release" "grafana" {
@@ -10,6 +11,7 @@ resource "helm_release" "grafana" {
   repository = "${data.helm_repository.stable.metadata.0.name}"
   chart      = "grafana"
   namespace  = "kafka"
+  timeout = 600
 
   values = [
     "${file("grafana/values.yaml")}",

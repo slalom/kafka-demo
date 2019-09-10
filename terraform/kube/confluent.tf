@@ -3,6 +3,7 @@ resource "helm_release" "confluent" {
   repository = "./"
   chart      = "cp-helm-charts"
   namespace  = "kafka"
+  timeout    = 600
 
   set {
     name  = "cp-kafka.persistence.enabled"
