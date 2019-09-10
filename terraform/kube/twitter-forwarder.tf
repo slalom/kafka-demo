@@ -9,7 +9,7 @@ resource "kubernetes_pod" "twitter-forwarder" {
 
   spec {
     container {
-      image = "906390086161.dkr.ecr.us-west-2.amazonaws.com/twitter-forwarder"
+      image = "twitter-forwarder"
       image_pull_policy = "IfNotPresent"
       name  = "twitter-forwarder-1"
     }
