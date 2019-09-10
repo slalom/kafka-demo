@@ -73,7 +73,7 @@ AWS Deployment is split into two sections, cluster deployment module (eks) and r
 
 3. Fill in VPC and Subnet IDs for the AWS EKS config in `terraform/eks/eks.tf` 
 
-3. `make provision.aws` and start the proxy in a separate terminal `make kube.proxy`
+4. `make provision.aws` and start the proxy in a separate terminal `make kube.proxy`
   It will take 10-15 minutes for the EKS cluster to provision in AWS, and an additional 10-20 minutes for the services to deploy and come up.
 
     This will run the following:  
