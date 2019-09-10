@@ -1,5 +1,5 @@
 module "cluster" {
-  source       = "terraform-aws-modules/eks/aws"
+  source       = "github.com/terraform-aws-modules/terraform-aws-eks?ref=v4.0.2"
   cluster_name = "kafka-demo"
   subnets      = [""]
   vpc_id       = ""

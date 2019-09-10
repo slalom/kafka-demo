@@ -1,6 +1,3 @@
-locals {
-  region = "us-west-2"
-}
 
 provider "helm" {
 }
@@ -10,7 +7,7 @@ provider "kubernetes" {
 
 provider "aws" {
   version = ">= 2.11"
-  region = local.region
+  region = "us-west-2"
 }
 
 module "eks" {
