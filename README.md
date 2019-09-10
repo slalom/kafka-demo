@@ -86,6 +86,20 @@ AWS Deployment is split into two sections, cluster deployment module (eks) and r
 
 Run `make tf.destroy` to remove both the kafka-demo resources and EKS cluster.
 
+#### Revert to local deployment
+
+Update kubectl to point to your local Kubernetes cluster.
+
+Follow instructions at top of the Readme (`make provision` or `make provision.local`)
+
+`make provision` (or `make provision.local`) will deploy only the local resources in the `kube` module, and skip the AWS `eks` module:
+
+`terraform apply -target="module.kube" terraform` 
+
+#### Terraform v0.11 / v0.12
+
+For use with Terraform v0.11 use the source `github.com/terraform-aws-modules/terraform-aws-eks?ref=v4.0.2` in `terraform/eks/eks.tf` eks module. For use with Terraform v0.12 use `terraform-aws-modules/eks/aws`. 
+
 #### Services  
 
 * Control Center  
