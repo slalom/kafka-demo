@@ -82,7 +82,6 @@ AWS Deployment is split into two sections, AWS cluster deployment module (eks) a
       * `connectors.add.both` (Configures connectors)
       * `twitter-forwarder.start.aws` (Starts the twitter forwarder service in EKS)
 
-
 Run `make tf.destroy` to remove both the kafka-demo resources and EKS cluster.
 
 #### Revert to local deployment
@@ -106,7 +105,7 @@ For use with Terraform v0.11 use the source `github.com/terraform-aws-modules/te
 
 * Grafana  
   Grafana comes up by running :  
-   `make grafana.open.aws`
+   `make grafana.open.aws`  User: admin, password is in your clipboard.
 
 * Dashboard  
   Dashboard does not seem to start correctly. The container fails to start in the default namespace, with errors in the logs. Likely permissions

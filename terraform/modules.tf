@@ -23,12 +23,12 @@ module "app" {
     helm = "helm"
     kubernetes = "kubernetes"
   }
-  kafka-streams-img = "${var.is_aws == true ? join("." , list(module.eks.account_id,"dkr.ecr",module.eks.region,"amazonaws.com/kafka-streams:latest")) : "kafka-streams:latest"}"
-  twitter-forwarder-img = "${var.is_aws == true ? join("." , list(module.eks.account_id,"dkr.ecr",module.eks.region,"amazonaws.com/twitter-forwarder:latest")) : "twitter-forwarder:latest"}"
-  tweets-transformation-img  = "${var.is_aws == true ? join("." , list(module.eks.account_id,"dkr.ecr",module.eks.region,"amazonaws.com/tweets-transformation:latest")) : "tweets-transformation:latest"}"
+  kafka-streams-img = "${var.deploy_aws == true ? join("." , list(module.eks.account_id,"dkr.ecr",module.eks.region,"amazonaws.com/kafka-streams:latest")) : "kafka-streams:latest"}"
+  twitter-forwarder-img = "${var.deploy_aws == true ? join("." , list(module.eks.account_id,"dkr.ecr",module.eks.region,"amazonaws.com/twitter-forwarder:latest")) : "twitter-forwarder:latest"}"
+  tweets-transformation-img  = "${var.deploy_aws == true ? join("." , list(module.eks.account_id,"dkr.ecr",module.eks.region,"amazonaws.com/tweets-transformation:latest")) : "tweets-transformation:latest"}"
 }
 
-variable "is_aws" {
+variable "deploy_aws" {
   type = "string"
   default = "false"
 }

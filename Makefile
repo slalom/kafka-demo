@@ -9,13 +9,13 @@ provision.aws: tf.apply.eks configure.aws.kubeconfig configure.helm.svcaccount t
 tf.apply: tf.apply.app
 
 tf.apply.app:
-	terraform apply --auto-approve -var is_aws=false -target="module.app" terraform
+	terraform apply --auto-approve -var deploy_aws=false -target="module.app" terraform
 
 tf.apply.app.aws:
-	terraform apply --auto-approve -var is_aws=true -target="module.app" terraform
+	terraform apply --auto-approve -var deploy_aws=true -target="module.app" terraform
 
 tf.apply.eks:
-	terraform apply --auto-approve -var is_aws=true -target="module.eks" terraform
+	terraform apply --auto-approve -var deploy_aws=true -target="module.eks" terraform
 
 configure.aws.kubeconfig:
 	aws eks update-kubeconfig --name kafka-demo
