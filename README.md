@@ -65,36 +65,34 @@ The Twitter forwarder is started by default, but you can also stop it.
   
 ### AWS Deployment
 
-AWS Deployment is split into two sections, cluster deployment module (eks) and resource deployment module (kube). Local deployment assumes local cluster has been provisioned and is available and only deploys the kube terraform module. AWS Deployment will deploy both cluster and kube to AWS.
+AWS Deployment is split into two sections, AWS cluster deployment module (eks) and resource deployment module (app). Local deployment (above) assumes local cluster has been provisioned and is available and only deploys the app terraform module. AWS Deployment will deploy both cluster and app modules to AWS.
 
-1. Setup AWS config and `terraform init`. Credentials and set local environment variable AWS_DEFAULT_REGION to your region for terraform. 
+1. Setup AWS config and `terraform init terraform`. Credentials and set local environment variable AWS_DEFAULT_REGION to your region for terraform. 
 
-2. Build the Docker images and deploy to ECR. Update terraform files to pull images from ECR. (`tweets-transformation`, `twitter-forwarder`, `kafka-streams`)
+2. Build the Docker images ([kafka-streams](kafka-streams/), [tweets-transformation](tweets-transformation/), and [twitter-forwarder](twitter-forwarder/)) then deploy to AWS ECR. [(see AWS ECR Documentation for reference)](https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-basics.html). When you run the next step terraform will point to your AWS ECR images under the `latest` tag.
 
-3. Fill in VPC and Subnet IDs for the AWS EKS config in `terraform/eks/eks.tf` 
+4. Run `make provision.aws` and start the proxy in a separate terminal (`make kube.proxy`)  
+    It will take 10-15 minutes for the EKS cluster to provision in AWS, and an additional 10-20 minutes for the services to deploy and come up.
 
-4. `make provision.aws` and start the proxy in a separate terminal `make kube.proxy`
-  It will take 10-15 minutes for the EKS cluster to provision in AWS, and an additional 10-20 minutes for the services to deploy and come up.
-
-    This will run the following:  
-      * `tf.apply.aws` (EKS TF module)
+    The `make provision.aws` command will do the following:  
+      * `tf.apply.eks` (EKS TF module)
       * `configure.aws.kubeconfig` (Configures kubectl on your system for EKS endpoint)
       * `configure.helm.svcaccount` (Configures helm service account in EKS)
       * `tf.apply.local` (Deploys kafka-demo to the EKS cluster)
       * `connectors.add.both` (Configures connectors)
       * `twitter-forwarder.start.aws` (Starts the twitter forwarder service in EKS)
 
+
 Run `make tf.destroy` to remove both the kafka-demo resources and EKS cluster.
 
 #### Revert to local deployment
 
-Update kubectl to point to your local Kubernetes cluster.
+Update kubectl to point to your local Kubernetes cluster by running:  
+  `kubectl config use-context docker-desktop` (if using docker-desktop)
 
-Follow instructions at top of the Readme (`make provision` or `make provision.local`)
+Follow instructions at top of the Readme (`make provision` or `make provision.app`)
 
-`make provision` (or `make provision.local`) will deploy only the local resources in the `kube` module, and skip the AWS `eks` module:
-
-`terraform apply -target="module.kube" terraform` 
+`make provision` (or `make provision.app`) will deploy only the local application resources in the `kube` module, and skip the AWS resources `eks` module. The deployment will use your local Docker images for `kafka-streams`, `tweets-transformation`, and `twitter-forwarder`.
 
 #### Terraform v0.11 / v0.12
 
@@ -103,10 +101,12 @@ For use with Terraform v0.11 use the source `github.com/terraform-aws-modules/te
 #### Services  
 
 * Control Center  
-  Control center comes up by running `make control-center.open`  
+  Control center comes up by running :  
+  `make control-center.open`  
 
 * Grafana  
-  * Open Grafana dashboard `make grafana.open.aws`
+  Grafana comes up by running :  
+   `make grafana.open.aws`
 
 * Dashboard  
   Dashboard does not seem to start correctly. The container fails to start in the default namespace, with errors in the logs. Likely permissions

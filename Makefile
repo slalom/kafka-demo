@@ -1,18 +1,21 @@
 #### Main
 
-provision: provision.local
+provision: provision.app
 
-provision.local: tf.apply.local connectors.add.both twitter-forwarder.start
+provision.app: tf.apply.app connectors.add.both twitter-forwarder.start
 
-provision.aws: tf.apply.aws configure.aws.kubeconfig configure.helm.svcaccount tf.apply.local connectors.add.both twitter-forwarder.start.aws
+provision.aws: tf.apply.eks configure.aws.kubeconfig configure.helm.svcaccount tf.apply.app.aws connectors.add.both twitter-forwarder.start.aws
 
-tf.apply: tf.apply.local
+tf.apply: tf.apply.app
 
-tf.apply.local:
-	terraform apply --auto-approve -target="module.kube" terraform
+tf.apply.app:
+	terraform apply --auto-approve -var is_aws=false -target="module.app" terraform
 
-tf.apply.aws:
-	terraform apply --auto-approve -target="module.eks" terraform
+tf.apply.app.aws:
+	terraform apply --auto-approve -var is_aws=true -target="module.app" terraform
+
+tf.apply.eks:
+	terraform apply --auto-approve -var is_aws=true -target="module.eks" terraform
 
 configure.aws.kubeconfig:
 	aws eks update-kubeconfig --name kafka-demo
