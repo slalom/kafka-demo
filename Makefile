@@ -1,9 +1,27 @@
 #### Main
 
-provision: tf.apply twitter-forwarder.build streams.build connectors.add.both twitter-forwarder.start
+provision: provision.app
 
-tf.apply:
-	terraform apply --auto-approve terraform
+provision.app: tf.apply.app connectors.add.both twitter-forwarder.start
+
+provision.aws: tf.apply.eks configure.aws.kubeconfig configure.helm.svcaccount tf.apply.app.aws connectors.add.both twitter-forwarder.start.aws
+
+tf.apply: tf.apply.app
+
+tf.apply.app:
+	terraform apply --auto-approve -var deploy_aws=false -target="module.app" terraform
+
+tf.apply.app.aws:
+	terraform apply --auto-approve -var deploy_aws=true -target="module.app" terraform
+
+tf.apply.eks:
+	terraform apply --auto-approve -var deploy_aws=true -target="module.eks" terraform
+
+configure.aws.kubeconfig:
+	aws eks update-kubeconfig --name kafka-demo
+
+configure.helm.svcaccount:
+	kubectl apply -f terraform/eks/tiller-user.yml && helm init --service-account tiller --upgrade
 
 tf.destroy:
 	terraform destroy
@@ -36,6 +54,10 @@ jenkins.password:
 jenkins.open: jenkins.password
 	open http://localhost:8081
 
+# jenkins.open.aws: jenkins.open
+# 	kubectl port-forward svc/jenkins 8081:8081 -n kafka
+
+
 #### Confluent Kafka Connect
 
 connectors.wait.for.confluent:
@@ -67,11 +89,14 @@ connectors.add.both: connectors.wait.for.confluent connector.source.add connecto
 #### Twitter Forwarder
 
 twitter-forwarder.build:
-	docker build twitter-forwarder -t sfo/twitter-forwarder
+	docker build twitter-forwarder -t twitter-forwarder
 
 twitter-forwarder.update: twitter-forwarder.build
 	terraform taint kubernetes_pod.twitter-forwarder && \
 	terraform apply -auto-approve terraform
+
+twitter-forwarder.start.aws: 
+	kubectl exec -it twitter-forwarder -n kafka -- sh -c 'curl -s http://localhost/twitter/on'
 
 twitter-forwarder.start:
 	curl -s http://localhost:3000/twitter/on
@@ -86,7 +111,7 @@ twitter-forwarder.logs:
 #### Tweets Transformer
 
 tweets-transformation.build:
-	docker build tweets-transformation -t sfo/tweets-transformation
+	docker build tweets-transformation -t tweets-transformation
 
 tweets-transformation.update: tweets-transformation.build
 	terraform taint kubernetes_pod.tweets-transformation && \
@@ -99,7 +124,7 @@ tweets-transformation.logs:
 #### Streams App
 
 streams.build:
-	docker build kafka-streams -t sfo/kafka-streams
+	docker build kafka-streams -t kafka-streams
 
 streams.update: streams.build
 	terraform taint kubernetes_pod.kafka-streams && \
@@ -129,6 +154,9 @@ grafana.password:
 
 grafana.open: grafana.password
 	open http://localhost:8083
+
+grafana.open.aws: grafana.open
+	kubectl port-forward svc/grafana 8083:8083 -n kafka 
 
 #### Other
 

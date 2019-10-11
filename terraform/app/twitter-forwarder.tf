@@ -9,7 +9,7 @@ resource "kubernetes_pod" "twitter-forwarder" {
 
   spec {
     container {
-      image = "sfo/twitter-forwarder"
+      image = "${var.twitter-forwarder-img}"
       image_pull_policy = "IfNotPresent"
       name  = "twitter-forwarder-1"
     }
@@ -32,4 +32,9 @@ resource "kubernetes_service" "twitter-forwarder" {
 
     type = "LoadBalancer"
   }
+}
+
+variable "twitter-forwarder-img" {
+  type = "string"
+  default = "twitter-forwarder:latest"
 }
