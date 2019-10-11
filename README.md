@@ -67,11 +67,11 @@ The Twitter forwarder is started by default, but you can also stop it.
 
 AWS Deployment is split into two sections, AWS cluster deployment module (eks) and resource deployment module (app). Local deployment (above) assumes local cluster has been provisioned and is available and only deploys the app terraform module. AWS Deployment will deploy both cluster and app modules to AWS.
 
-1. Setup AWS config and `terraform init terraform`. Credentials and set local environment variable AWS_DEFAULT_REGION to your region for terraform. 
+1. Setup local AWS CLI credentials (`aws configure`) and set your `AWS_PROFILE` environment variable if you are not using the `default` profile. Set your region environment variable `AWS_DEFAULT_REGION`, then initialize terraform with `terraform init terraform`.
 
 2. Build the Docker images ([kafka-streams](kafka-streams/), [tweets-transformation](tweets-transformation/), and [twitter-forwarder](twitter-forwarder/)) then deploy to AWS ECR. [(see AWS ECR Documentation for reference)](https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-basics.html). When you run the next step terraform will point to your AWS ECR images under the `latest` tag.
 
-4. Run `make provision.aws` and start the proxy in a separate terminal (`make kube.proxy`)  
+3. Run `make provision.aws` and start the proxy in a separate terminal (`make kube.proxy`)  
     It will take 10-15 minutes for the EKS cluster to provision in AWS, and an additional 10-20 minutes for the services to deploy and come up.
 
     The `make provision.aws` command will do the following:  
