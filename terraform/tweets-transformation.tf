@@ -1,7 +1,8 @@
 resource "kubernetes_pod" "tweets-transformation" {
   metadata {
-    name = "tweets-transformation"
+    name      = "tweets-transformation"
     namespace = "kafka"
+
     labels = {
       app = "tweets-transformation"
     }
@@ -9,9 +10,9 @@ resource "kubernetes_pod" "tweets-transformation" {
 
   spec {
     container {
-      image = "sfo/tweets-transformation"
+      image             = "sfo/tweets-transformation"
       image_pull_policy = "IfNotPresent"
-      name  = "tweets-transformation-1"
+      name              = "tweets-transformation-1"
     }
   }
 }

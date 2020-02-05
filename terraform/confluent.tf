@@ -18,6 +18,7 @@ resource "helm_release" "confluent" {
     name  = "cp-zookeeper.servers"
     value = "1"
   }
+
   set {
     name  = "cp-kafka.brokers"
     value = "3"
