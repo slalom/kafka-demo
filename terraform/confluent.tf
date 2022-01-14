@@ -1,8 +1,8 @@
 resource "helm_release" "confluent" {
   name       = "confluent"
-  repository = "./"
+  repository = "https://confluentinc.github.io/cp-helm-charts/"
   chart      = "cp-helm-charts"
-  namespace  = "kafka"
+  namespace  = kubernetes_namespace.kafka.metadata[0].name
 
   set {
     name  = "cp-kafka.persistence.enabled"

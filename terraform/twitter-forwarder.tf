@@ -1,7 +1,7 @@
 resource "kubernetes_pod" "twitter-forwarder" {
   metadata {
     name      = "twitter-forwarder"
-    namespace = "kafka"
+    namespace = kubernetes_namespace.kafka.metadata[0].name
 
     labels = {
       app = "twitter-forwarder"
@@ -20,7 +20,7 @@ resource "kubernetes_pod" "twitter-forwarder" {
 resource "kubernetes_service" "twitter-forwarder" {
   metadata {
     name      = "twitter-forwarder"
-    namespace = "kafka"
+    namespace = kubernetes_namespace.kafka.metadata[0].name
   }
 
   spec {

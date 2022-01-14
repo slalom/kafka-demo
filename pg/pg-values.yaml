@@ -20,11 +20,12 @@ initdbScripts:
     CREATE TABLE tweets (
     id serial PRIMARY KEY,
     text text,
-    country text,
+    language text,
+    source text,
     datetime text DEFAULT now()
     );
     CREATE TABLE counts (
-    country text PRIMARY KEY,
+    language text PRIMARY KEY,
     count integer
     );
 

@@ -3,10 +3,10 @@
 provision: twitter-forwarder.build streams.build tweets-transformation.build tf.apply connectors.add.both twitter-forwarder.start
 
 tf.apply:
-	terraform apply --auto-approve terraform
+	terraform -chdir=terraform apply --auto-approve
 
 tf.destroy:
-	terraform destroy
+	terraform -chdir=terraform destroy
 
 #### Kube Dashboard
 
@@ -70,8 +70,8 @@ twitter-forwarder.build:
 	docker build twitter-forwarder -t sfo/twitter-forwarder
 
 twitter-forwarder.update: twitter-forwarder.build
-	terraform taint kubernetes_pod.twitter-forwarder && \
-	terraform apply -auto-approve terraform
+	terraform -chdir=terraform taint kubernetes_pod.twitter-forwarder && \
+	terraform -chdir=terraform apply -auto-approve
 
 twitter-forwarder.start:
 	curl -s http://localhost:3000/twitter/on
@@ -89,8 +89,8 @@ tweets-transformation.build:
 	docker build tweets-transformation -t sfo/tweets-transformation
 
 tweets-transformation.update: tweets-transformation.build
-	terraform taint kubernetes_pod.tweets-transformation && \
-	terraform apply -auto-approve terraform
+	terraform -chdir=terraform taint kubernetes_pod.tweets-transformation && \
+	terraform -chdir=terraform apply -auto-approve
 
 tweets-transformation.logs:
 	kubectl logs tweets-transformation -f -n kafka
@@ -102,8 +102,8 @@ streams.build:
 	docker build kafka-streams -t sfo/kafka-streams
 
 streams.update: streams.build
-	terraform taint kubernetes_pod.kafka-streams && \
-	terraform apply -auto-approve terraform
+	terraform -chdir=terraform taint kubernetes_pod.kafka-streams && \
+	terraform -chdir=terraform apply -auto-approve
 
 streams.logs:
 	kubectl logs kafka-streams -f -n kafka

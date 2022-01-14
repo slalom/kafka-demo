@@ -5,9 +5,9 @@
 ## Prerequisites
 
 - Docker with Kubernetes (standard on Mac and Windows)
-- helm
-- terraform
-- jq (for parsing kubectl responses)
+- helm [link](https://helm.sh/)
+- terraform [link](https://www.terraform.io/)
+- jq (for parsing kubectl responses) [link](https://stedolan.github.io/jq/)
 - git (for getting Confluent helm charts)
 
 ## Installation
@@ -16,7 +16,7 @@
 
 1. Get your local Kubernetes up and running
 2. Test it with `kubectl cluster-info`
-3. `terraform init terraform`
+3. `terraform -chdir=terraform init`
 4. `make kube.proxy` and keep it running on the side
 
 ### Provisioning
@@ -29,7 +29,12 @@
 
 ### Kube dashboard
 
-1. Install the dashboar (it's purposefully not part of the solution): `helm install stable/kubernetes-dashboard --name kube-dashboard`
+1. Install the dashboard (it's purposefully not part of the solution):
+
+`helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/`
+
+`helm install kube-dashboard kubernetes-dashboard/kubernetes-dashboard`
+
 2. `make dashboard.open`. This will open the web app and put the token in your clipboard
 3. Use the token from your clipboard
 

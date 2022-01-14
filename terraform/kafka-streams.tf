@@ -1,7 +1,7 @@
 resource "kubernetes_pod" "kafka-streams" {
   metadata {
     name      = "kafka-streams"
-    namespace = "kafka"
+    namespace = kubernetes_namespace.kafka.metadata[0].name
   }
 
   spec {

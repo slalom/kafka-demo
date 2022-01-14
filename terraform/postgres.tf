@@ -1,11 +1,11 @@
 resource "helm_release" "pg" {
   name       = "pg"
-  repository = "${data.helm_repository.stable.metadata.0.name}"
+  repository = "https://charts.bitnami.com/bitnami"
   chart      = "postgresql"
-  namespace  = "kafka"
+  namespace  = kubernetes_namespace.kafka.metadata[0].name
 
   values = [
-    "${file("pg/pg-values.yaml")}",
+    "${file("../pg/pg-values.yaml")}",
   ]
 
   set {

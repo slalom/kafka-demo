@@ -10,6 +10,8 @@ conn.set_session(autocommit=True)
 cur = conn.cursor()
 
 def insert(message):
-  text = message.message["text"]
-  country = message.message["place"] and message.message["place"]["country"] or "Unknown"
-  cur.execute( "INSERT INTO tweets (text, country) VALUES (%s, %s)", (text, country) )
+  text = message["data"]["text"]
+  language = message["data"]["lang"] or "Unknown"
+  source = message["data"]["source"] or "Unknown"
+  # print(f"{message['data']['text']}, {message['data']['lang']} ")
+  cur.execute( "INSERT INTO tweets (text, language, source) VALUES (%s, %s, %s)", (text, language, source) )

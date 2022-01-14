@@ -1,5 +1,7 @@
 # python
 __pycache__/
+.python-version
+.venv/
 
 # vs code
 .vscode/
@@ -7,6 +9,7 @@ __pycache__/
 # tf
 .terraform/
 terraform.tfstate*
+.terraform.lock.hcl
 
 # mac DS
 .DS_Store
