@@ -13,5 +13,5 @@ def insert(message):
   text = message["data"]["text"]
   language = message["data"]["lang"] or "Unknown"
   source = message["data"]["source"] or "Unknown"
-  # print(f"{message['data']['text']}, {message['data']['lang']} ")
+  # print(f"{text}, {language}, {source} ")
   cur.execute( "INSERT INTO tweets (text, language, source) VALUES (%s, %s, %s)", (text, language, source) )
