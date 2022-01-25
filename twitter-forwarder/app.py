@@ -1,12 +1,13 @@
 import requests
 import os
 import json
-import db
+from db import DB, MockDB
 
 from flask import Flask
 
 app = Flask(__name__)
 bearer_token = 'TWITTER TOKEN GOES HERE'
+db = DB()
 
 def create_url():
     return "https://api.twitter.com/2/tweets/sample/stream?&tweet.fields=lang,source"
