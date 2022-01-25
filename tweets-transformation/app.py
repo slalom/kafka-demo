@@ -7,6 +7,7 @@ import json
 import time
 
 app = Flask(__name__)
+topic_name = 'pgtweets'
 
 @app.route("/")
 def ping():
@@ -18,11 +19,11 @@ c = AvroConsumer({'bootstrap.servers': 'confluent-cp-kafka:9092',
               'schema.registry.url': 'http://confluent-cp-schema-registry:8081',
               'auto.offset.reset': 'earliest'})
 
-while 'pgtweets' not in c.list_topics().topics:
-    print('Waiting for pgtweets topic')
+while topic_name not in c.list_topics().topics:
+    print(f'Waiting for {topic_name} topic')
     time.sleep(1)
 
-c.subscribe(['pgtweets'])
+c.subscribe([topic_name])
 
 def wrap_in_schema(msg):
     return {
