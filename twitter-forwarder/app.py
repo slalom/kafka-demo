@@ -1,12 +1,14 @@
 import requests
 import os
+from dotenv import load_dotenv
 import json
 from db import DB, MockDB
 
 from flask import Flask
 
+load_dotenv()
 app = Flask(__name__)
-bearer_token = 'TWITTER TOKEN GOES HERE'
+bearer_token = os.getenv('TWITTER_KEY')
 db = DB()
 
 def create_url():
