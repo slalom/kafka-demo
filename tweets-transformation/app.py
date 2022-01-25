@@ -1,10 +1,10 @@
 import threading
 from confluent_kafka.avro import AvroConsumer
-from confluent_kafka import avro
 from confluent_kafka import KafkaException
 from flask import Flask
 from confluent_kafka import Producer
 import json
+import time
 
 app = Flask(__name__)
 
@@ -17,6 +17,10 @@ c = AvroConsumer({'bootstrap.servers': 'confluent-cp-kafka:9092',
               'session.timeout.ms': 6000,
               'schema.registry.url': 'http://confluent-cp-schema-registry:8081',
               'auto.offset.reset': 'earliest'})
+
+while 'pgtweets' not in c.list_topics().topics:
+    print('Waiting for pgtweets topic')
+    time.sleep(1)
 
 c.subscribe(['pgtweets'])
 
@@ -62,8 +66,8 @@ class mythread(threading.Thread):
             if msg.error():
                 raise KafkaException(msg.error())
             else:
-                output = transform_message(msg.value())
-                key = msg.value()['country']
+                output = transform_message(msg)
+                key = msg.value()['language']
                 p.produce('word_count', output, key)
 
     except KeyboardInterrupt:

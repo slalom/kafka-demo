@@ -21,7 +21,7 @@ public class KafkaStreamsClient {
     public static void main(String[] args) throws IOException {
 
         Properties config = new Properties();
-        config.put(StreamsConfig.APPLICATION_ID_CONFIG, "sfo-demo-app-id");
+        config.put(StreamsConfig.APPLICATION_ID_CONFIG, "slalom-kafka-demo");
         config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "confluent-cp-kafka:9092");
         config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
@@ -48,9 +48,9 @@ public class KafkaStreamsClient {
         };
 
         builder.stream("pgtweets", Consumed.with(Serdes.String(), avroSerde))
-                .groupBy((keyIgnored, value) -> value.get("country").toString())
+                .groupBy((keyIgnored, value) -> value.get("language").toString())
                 .count()
-                .filter((country, count) -> count > 5)
+                .filter((language, count) -> count > 5)
                 .mapValues(toAvroMessage)
                 .toStream().to("counts");
 

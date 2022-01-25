@@ -6,8 +6,8 @@ resource "kubernetes_pod" "kafka-streams" {
 
   spec {
     container {
-      image             = "sfo/kafka-streams"
-      image_pull_policy = "IfNotPresent"
+      image             = "slalom/kafka-streams"
+      image_pull_policy = "Never"
       name              = "kafka-streams-1"
     }
   }

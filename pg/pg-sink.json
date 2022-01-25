@@ -9,7 +9,7 @@
         "key.converter": "org.apache.kafka.connect.storage.StringConverter",
         "value.converter": "org.apache.kafka.connect.json.JsonConverter",
         "pk.mode": "record_key",
-        "pk.fields": "country",
+        "pk.fields": "language",
         "auto.create": "true",
         "insert.mode": "upsert"
     }

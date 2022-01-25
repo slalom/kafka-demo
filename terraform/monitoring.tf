@@ -1,7 +1,14 @@
-resource "helm_release" "prometheus" {
+resource "helm_release" "prometheus-kafka-exporter" {
   name       = "prometheus-kafka-exporter"
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "prometheus-kafka-exporter"
+  namespace  = kubernetes_namespace.kafka.metadata[0].name
+}
+
+resource "helm_release" "prometheus" {
+  name       = "prometheus"
+  repository = "https://prometheus-community.github.io/helm-charts"
+  chart      = "prometheus"
   namespace  = kubernetes_namespace.kafka.metadata[0].name
 }
 

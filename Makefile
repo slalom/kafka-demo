@@ -1,12 +1,17 @@
 #### Main
 
-provision: twitter-forwarder.build streams.build tweets-transformation.build tf.apply connectors.add.both twitter-forwarder.start
+provision: twitter-forwarder.build streams.build tweets-transformation.build docker.build tf.apply connectors.add.both
+
+reprovision: tf.destroy provision
+
+docker.build:
+	docker build kafka-connect-jdbc -t slalom/kafka-connect-jdbc
 
 tf.apply:
 	terraform -chdir=terraform apply --auto-approve
 
 tf.destroy:
-	terraform -chdir=terraform destroy
+	terraform -chdir=terraform destroy --auto-approve
 
 #### Kube Dashboard
 
@@ -39,7 +44,11 @@ jenkins.open: jenkins.password
 #### Confluent Kafka Connect
 
 connectors.wait.for.confluent:
-	bash -c 'while [[ `curl http://localhost:8001/api/v1/namespaces/kafka/services/http:confluent-cp-kafka-connect:kafka-connect/proxy/connectors/ -s -o /dev/null -w ''%{http_code}''` != "200" ]]; do sleep 5; done'
+	bash -c 'sec=0; while [[ `curl http://localhost:8001/api/v1/namespaces/kafka/services/http:confluent-cp-kafka-connect:kafka-connect/proxy/connectors/ -s -o /dev/null -w ''%{http_code}''` != "200" ]]; do echo "Waiting for Kafka... ($${sec}s)" && sleep 5 && ((sec=sec+5)); done'
+
+connector.install.jdbc:
+	POD=`kubectl get pod -n kafka -l app=cp-kafka-connect -o json | jq '.items[0].metadata.name' -r` && \
+	kubectl exec -c cp-kafka-connect-server -it $$POD -n kafka -- confluent-hub install --no-prompt --verbose --component-dir /usr/share/java confluentinc/kafka-connect-jdbc:10.3.1
 
 connector.list:
 	curl -s http://localhost:8001/api/v1/namespaces/kafka/services/http:confluent-cp-kafka-connect:kafka-connect/proxy/connectors/ | jq
@@ -67,17 +76,11 @@ connectors.add.both: connectors.wait.for.confluent connector.source.add connecto
 #### Twitter Forwarder
 
 twitter-forwarder.build:
-	docker build twitter-forwarder -t sfo/twitter-forwarder
+	docker build twitter-forwarder -t slalom/twitter-forwarder
 
 twitter-forwarder.update: twitter-forwarder.build
 	terraform -chdir=terraform taint kubernetes_pod.twitter-forwarder && \
 	terraform -chdir=terraform apply -auto-approve
-
-twitter-forwarder.start:
-	curl -s http://localhost:3000/twitter/on
-
-twitter-forwarder.stop:
-	curl -s http://localhost:3000/twitter/off
 
 twitter-forwarder.logs:
 	kubectl logs twitter-forwarder -f -n kafka
@@ -86,7 +89,7 @@ twitter-forwarder.logs:
 #### Tweets Transformer
 
 tweets-transformation.build:
-	docker build tweets-transformation -t sfo/tweets-transformation
+	docker build tweets-transformation -t slalom/tweets-transformation
 
 tweets-transformation.update: tweets-transformation.build
 	terraform -chdir=terraform taint kubernetes_pod.tweets-transformation && \
@@ -99,7 +102,7 @@ tweets-transformation.logs:
 #### Streams App
 
 streams.build:
-	docker build kafka-streams -t sfo/kafka-streams
+	docker build kafka-streams -t slalom/kafka-streams
 
 streams.update: streams.build
 	terraform -chdir=terraform taint kubernetes_pod.kafka-streams && \
@@ -159,7 +162,7 @@ consumer.word_count:
 		--property print.key=true \
 		--topic word_count
 
-consumer.count_by_country:
+consumer.count_by_language:
 	POD=`kubectl get pod -n kafka -l app=cp-schema-registry -o json | jq '.items[0].metadata.name' -r` && \
 	kubectl exec -c cp-schema-registry-server -it $$POD -n kafka -- /bin/bash -c "unset JMX_PORT && /usr/bin/kafka-avro-console-consumer \
 		--bootstrap-server confluent-cp-kafka:9092 \

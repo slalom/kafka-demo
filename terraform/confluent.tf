@@ -23,4 +23,14 @@ resource "helm_release" "confluent" {
     name  = "cp-kafka.brokers"
     value = "3"
   }
+
+  set {
+    name = "cp-kafka-connect.image"
+    value = "slalom/kafka-connect-jdbc"
+  }
+
+  set {
+    name = "cp-kafka-connect.imageTag"
+    value = "latest"
+  }
 }

@@ -10,8 +10,8 @@ resource "kubernetes_pod" "twitter-forwarder" {
 
   spec {
     container {
-      image             = "sfo/twitter-forwarder"
-      image_pull_policy = "IfNotPresent"
+      image             = "slalom/twitter-forwarder"
+      image_pull_policy = "Never"
       name              = "twitter-forwarder-1"
     }
   }

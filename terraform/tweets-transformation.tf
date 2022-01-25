@@ -10,8 +10,8 @@ resource "kubernetes_pod" "tweets-transformation" {
 
   spec {
     container {
-      image             = "sfo/tweets-transformation"
-      image_pull_policy = "IfNotPresent"
+      image             = "slalom/tweets-transformation"
+      image_pull_policy = "Never"
       name              = "tweets-transformation-1"
     }
   }
