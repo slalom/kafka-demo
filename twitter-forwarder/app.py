@@ -1,30 +1,31 @@
-import requests
-import os
-from dotenv import load_dotenv
-import json
+import csv
+import time
 from db import DB, MockDB
 
 from flask import Flask
 
-load_dotenv()
+mock = False
+
+def get_db():
+    return MockDB() if mock else DB()
+
 app = Flask(__name__)
-bearer_token = os.getenv('TWITTER_KEY')
-db = DB()
+db = get_db()
 
-def create_url():
-    return "https://api.twitter.com/2/tweets/sample/stream?&tweet.fields=lang,source"
+def parse_line(line):
+    return {
+        'text': line[3],
+        'lang': line[11],
+        'source': line[5]
+    }
 
-def bearer_oauth(r):
-    r.headers["Authorization"] = f"Bearer {bearer_token}"
-    r.headers["User-Agent"] = "v2SampledStreamPython"
-    return r
-
-url = create_url()
-response = requests.request("GET", url, auth=bearer_oauth, stream=True)
-for response_line in response.iter_lines():
-        if response_line:
-            message = json.loads(response_line)
-            db.insert(message)
+with open('tweets.csv') as f:
+    csv_reader = csv.reader(f)
+    # skip the header
+    next(csv_reader)
+    for tokens in csv_reader:
+        db.insert(parse_line(tokens))
+        time.sleep(0.1)
 
 @app.route("/")
 def ping():

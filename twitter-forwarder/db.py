@@ -13,16 +13,16 @@ class DB:
     self.cur = conn.cursor()
 
   def insert(self, message):
-    text = message["data"]["text"]
-    language = message["data"]["lang"] or "Unknown"
-    source = message["data"]["source"] or "Unknown"
+    text = message["text"]
+    language = message["lang"] or "Unknown"
+    source = message["source"] or "Unknown"
     self.cur.execute( "INSERT INTO tweets (text, language, source) VALUES (%s, %s, %s)", (text, language, source) )
 
 
 class MockDB:
 
   def insert(self, message):
-    text = message["data"]["text"]
-    language = message["data"]["lang"] or "Unknown"
-    source = message["data"]["source"] or "Unknown"
-    print(f"{text}, {language}, {source} ")
+    text = message["text"]
+    language = message["lang"] or "Unknown"
+    source = message["source"] or "Unknown"
+    print(f"{language}, {source} ")
