@@ -166,6 +166,115 @@ dashboards:
               "yaxis": {
                 "align": false
               }
+            },
+            {
+              "aliasColors": {},
+              "bars": true,
+              "dashLength": 10,
+              "dashes": false,
+              "datasource": {
+                "type": "postgres",
+                "uid": "PA942B37CCFAF5A81"
+              },
+              "fill": 1,
+              "fillGradient": 0,
+              "gridPos": {
+                "h": 9,
+                "w": 12,
+                "x": 12,
+                "y": 0
+              },
+              "hiddenSeries": false,
+              "id": 3,
+              "legend": {
+                "avg": false,
+                "current": false,
+                "max": false,
+                "min": false,
+                "show": false,
+                "total": false,
+                "values": false
+              },
+              "lines": false,
+              "linewidth": 1,
+              "nullPointMode": "connected",
+              "options": {
+                "alertThreshold": true
+              },
+              "percentage": false,
+              "pluginVersion": "8.3.4",
+              "pointradius": 2,
+              "points": false,
+              "renderer": "flot",
+              "seriesOverrides": [],
+              "spaceLength": 10,
+              "stack": false,
+              "steppedLine": false,
+              "targets": [
+                {
+                  "datasource": {
+                    "type": "postgres",
+                    "uid": "PA942B37CCFAF5A81"
+                  },
+                  "format": "time_series",
+                  "group": [],
+                  "metricColumn": "none",
+                  "rawQuery": true,
+                  "rawSql": "SELECT * FROM (\n    SELECT\n        MIN(to_timestamp(t.datetime, 'YYYY-MM-DD HH24:MI:SS.US+00')) AS \"time\",\n        COUNT(*) AS \"value\",\n        t.source AS \"metric\"\n        FROM tweets t\n        GROUP BY t.source\n        ORDER BY \"value\" DESC\n        LIMIT 5) as s\nORDER BY s.time",
+                  "refId": "A",
+                  "select": [
+                    [
+                      {
+                        "params": [
+                          "count"
+                        ],
+                        "type": "column"
+                      }
+                    ]
+                  ],
+                  "table": "counts",
+                  "timeColumn": "count",
+                  "timeColumnType": "int4",
+                  "where": [
+                    {
+                      "name": "$__unixEpochFilter",
+                      "params": [],
+                      "type": "macro"
+                    }
+                  ]
+                }
+              ],
+              "thresholds": [],
+              "timeRegions": [],
+              "title": "Tweet Counts by Source",
+              "tooltip": {
+                "shared": false,
+                "sort": 0,
+                "value_type": "individual"
+              },
+              "type": "graph",
+              "xaxis": {
+                "mode": "series",
+                "show": true,
+                "values": [
+                  "current"
+                ]
+              },
+              "yaxes": [
+                {
+                  "format": "short",
+                  "logBase": 1,
+                  "show": true
+                },
+                {
+                  "format": "short",
+                  "logBase": 1,
+                  "show": true
+                }
+              ],
+              "yaxis": {
+                "align": false
+              }
             }
           ],
           "refresh": "5s",
