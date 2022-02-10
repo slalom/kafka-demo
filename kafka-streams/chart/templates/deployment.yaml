@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-streams
+  labels:
+    app: kafka-streams
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-streams
+  template:
+    metadata:
+      labels:
+        app: kafka-streams
+    spec:
+      containers:
+      - name: kafka-streams-1
+        image: slalom/kafka-streams
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80

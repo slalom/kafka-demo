@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: twitter-forwarder
+  labels:
+    app: twitter-forwarder
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: twitter-forwarder
+  template:
+    metadata:
+      labels:
+        app: twitter-forwarder
+    spec:
+      containers:
+      - name: twitter-forwarder-1
+        image: slalom/twitter-forwarder
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80

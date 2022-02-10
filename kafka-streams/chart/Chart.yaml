@@ -1,0 +1,5 @@
+apiVersion: v2
+name: kafka-streams
+description: Java Kafka Streams application
+type: application
+version: 1.0.0

@@ -1,0 +1,5 @@
+apiVersion: v2
+name: tweets-transformation
+description: Python app tranforming tweets on the Kafka topic
+type: application
+version: 1.0.0

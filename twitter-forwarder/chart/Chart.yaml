@@ -1,0 +1,5 @@
+apiVersion: v2
+name: twitter-forwarder
+description: Python app sending tweets to the database
+type: application
+version: 1.0.0

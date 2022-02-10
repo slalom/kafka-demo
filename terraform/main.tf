@@ -5,11 +5,6 @@ provider "helm" {
   }
 }
 
-variable "helm_repo" {
-  type = string
-  default = "https://kubernetes-charts.storage.googleapis.com"
-}
-
 provider "kubernetes" {
   config_path = "~/.kube/config"
   config_context = "docker-desktop"

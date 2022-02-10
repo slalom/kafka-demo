@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tweets-transformation
+  labels:
+    app: tweets-transformation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tweets-transformation
+  template:
+    metadata:
+      labels:
+        app: tweets-transformation
+    spec:
+      containers:
+      - name: tweets-transformation-1
+        image: slalom/tweets-transformation
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
