@@ -18,7 +18,6 @@
 2. Test it with `kubectl cluster-info`
 3. `terraform -chdir=terraform init`
 4. `make kube.proxy` and keep it running on the side
-5. Sign up for a Twitter dev account [here](https://developer.twitter.com/) and insert the Twitter token in `twitter-forwarder/.env`
 
 ### Provisioning
 
