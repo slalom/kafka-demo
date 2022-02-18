@@ -27,7 +27,14 @@
 
 1. `make tf.destroy`
 
-### Kube dashboard
+
+### Grafana
+You can see a live Counts dashboard in Grafana.
+
+1. `make grafana.open`. User: admin, password is in your clipboard.
+
+
+### Kube dashboard (optional)
 
 1. Install the dashboard (it's purposefully not part of the solution):
 
@@ -44,16 +51,6 @@
 
 1. `make control-center.open`
 
-### Grafana
-
-1. `make grafana.open`. User: admin, password is in your clipboard.
-
-### Twitter forwarder
-
-The Twitter forwarder is started by default, but you can also stop it.
-
-1. `make twitter-forwarder.start` to start feeding Twitter messages to the database
-2. `make twitter-forwarder.stop` to... stop
 
 ### Jenkins
 
